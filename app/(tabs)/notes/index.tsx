@@ -4,6 +4,7 @@ import { NoteItem } from '../../../modules/notes/components/NoteItem';
 import { useRouter } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
+import { EmptyState } from '../../../modules/core/components/EmptyState';
 
 export default function NotesListScreen() {
     const { notes } = useStore();
@@ -27,9 +28,7 @@ export default function NotesListScreen() {
                 )}
                 contentContainerStyle={styles.list}
                 ListEmptyComponent={
-                    <View style={styles.empty}>
-                        <Text style={styles.emptyText}>No notes yet</Text>
-                    </View>
+                    <EmptyState text="No notes yet" />
                 }
             />
 
@@ -48,14 +47,7 @@ const styles = StyleSheet.create({
         // padding handled by ScreenLayout, but maybe we need bottom padding for scrolling past FAB
         paddingBottom: 100,
     },
-    empty: {
-        alignItems: 'center',
-        marginTop: 50,
-    },
-    emptyText: {
-        color: '#666',
-        fontSize: 16,
-    },
+
     fab: {
         position: 'absolute',
         bottom: 20,

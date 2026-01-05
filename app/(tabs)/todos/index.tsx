@@ -4,6 +4,7 @@ import { TodoItem } from '../../../modules/todos/components/TodoItem';
 import { useState } from 'react';
 import { Plus } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
+import { EmptyState } from '../../../modules/core/components/EmptyState';
 
 export default function TodoListScreen() {
     const { todos, addTodo, toggleTodo, deleteTodo } = useStore();
@@ -26,9 +27,7 @@ export default function TodoListScreen() {
                 )}
                 contentContainerStyle={styles.list}
                 ListEmptyComponent={
-                    <View style={styles.empty}>
-                        <Text style={styles.emptyText}>No todos yet</Text>
-                    </View>
+                    <EmptyState text="No todos yet" />
                 }
             />
 
@@ -61,14 +60,7 @@ const styles = StyleSheet.create({
     list: {
         paddingBottom: 100,
     },
-    empty: {
-        alignItems: 'center',
-        marginTop: 50,
-    },
-    emptyText: {
-        color: '#666',
-        fontSize: 16,
-    },
+
     inputContainer: {
         position: 'absolute',
         bottom: 20,

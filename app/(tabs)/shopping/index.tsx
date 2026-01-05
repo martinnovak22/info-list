@@ -5,6 +5,7 @@ import { ShoppingItem } from '../../../modules/shopping/components/ShoppingItem'
 import { useState } from 'react';
 import { Plus } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
+import { EmptyState } from '../../../modules/core/components/EmptyState';
 
 export default function ShoppingListScreen() {
     const { shoppingList, addShoppingItem, toggleShoppingItem, deleteShoppingItem } = useStore();
@@ -27,9 +28,7 @@ export default function ShoppingListScreen() {
                 )}
                 contentContainerStyle={styles.list}
                 ListEmptyComponent={
-                    <View style={styles.empty}>
-                        <Text style={styles.emptyText}>No items to buy</Text>
-                    </View>
+                    <EmptyState text="No items to buy" />
                 }
             />
 
@@ -62,14 +61,7 @@ const styles = StyleSheet.create({
     list: {
         paddingBottom: 100,
     },
-    empty: {
-        alignItems: 'center',
-        marginTop: 50,
-    },
-    emptyText: {
-        color: '#666',
-        fontSize: 16,
-    },
+
     inputContainer: {
         position: 'absolute',
         bottom: 20,

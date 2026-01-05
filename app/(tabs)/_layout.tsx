@@ -19,6 +19,12 @@ export default function TabLayout() {
                     backgroundColor: '#121212',
                 },
                 headerTintColor: '#fff',
+                headerRightContainerStyle: {
+                    paddingRight: 8,
+                },
+                headerLeftContainerStyle: {
+                    paddingLeft: 8,
+                },
             }}>
             <Tabs.Screen
                 name="todos"

@@ -1,9 +1,9 @@
-import { View, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { TextInput, StyleSheet, Alert, View, Pressable, Text } from 'react-native';
+import { useLocalSearchParams, useRouter, Stack, useNavigation } from 'expo-router';
 import { useStore } from '../../../modules/core/store';
-import { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigation } from 'expo-router';
-import { Trash2, Save } from 'lucide-react-native';
+import { useState, useLayoutEffect } from 'react';
+import { Trash2, Save, ArrowLeft } from 'lucide-react-native';
+import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 
 export default function NoteDetailScreen() {
     const { id } = useLocalSearchParams();
@@ -19,25 +19,37 @@ export default function NoteDetailScreen() {
     const [title, setTitle] = useState(existingNote?.title || '');
     const [content, setContent] = useState(existingNote?.content || '');
 
-    // Update headers
     useLayoutEffect(() => {
-        navigation.setOptions({
-            headerTitle: isNew ? 'New Note' : 'Edit Note',
-            headerTintColor: '#fff',
-            headerStyle: { backgroundColor: '#121212' },
+        navigation.getParent()?.setOptions({
+            title: isNew ? 'New Note' : 'Edit Note',
+            headerLeft: () => (
+                <Pressable onPress={() => router.back()} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1, marginRight: 16 })}>
+                    <ArrowLeft size={24} color="#fff" />
+                </Pressable>
+            ),
             headerRight: () => (
                 <View style={{ flexDirection: 'row', gap: 16 }}>
                     {!isNew && (
-                        <TouchableOpacity onPress={handleDelete}>
+                        <Pressable
+                            onPress={handleDelete}
+                            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+                        >
                             <Trash2 size={24} color="#ff5252" />
-                        </TouchableOpacity>
+                        </Pressable>
                     )}
-                    <TouchableOpacity onPress={handleSave}>
+                    <Pressable
+                        onPress={handleSave}
+                        style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+                    >
                         <Save size={24} color="#4caf50" />
-                    </TouchableOpacity>
+                    </Pressable>
                 </View>
             ),
         });
+
+        return () => {
+            navigation.getParent()?.setOptions({ title: 'Notes', headerRight: undefined, headerLeft: undefined });
+        };
     }, [navigation, isNew, title, content]);
 
     const handleSave = () => {
@@ -66,7 +78,7 @@ export default function NoteDetailScreen() {
     };
 
     return (
-        <View style={styles.container}>
+        <ScreenLayout style={styles.container}>
             <TextInput
                 style={styles.titleInput}
                 placeholder="Title"
@@ -83,15 +95,13 @@ export default function NoteDetailScreen() {
                 multiline
                 textAlignVertical="top"
             />
-        </View>
+        </ScreenLayout>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#121212',
-        padding: 16,
+        paddingTop: 16, // Override ScreenLayout padding top if needed, or stick to default
     },
     titleInput: {
         fontSize: 24,
