@@ -5,16 +5,19 @@ import { ShoppingItem } from '../../../modules/shopping/components/ShoppingItem'
 import { useState } from 'react';
 import { Plus } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
+import { DatePickerInput } from '../../../modules/core/components/DatePickerInput';
 import { EmptyState } from '../../../modules/core/components/EmptyState';
 
 export default function ShoppingListScreen() {
     const { shoppingList, addShoppingItem, toggleShoppingItem, deleteShoppingItem } = useStore();
     const [text, setText] = useState('');
+    const [dueDate, setDueDate] = useState<number | undefined>();
 
     const handleAdd = () => {
         if (text.trim()) {
-            addShoppingItem(text.trim());
+            addShoppingItem(text.trim(), dueDate);
             setText('');
+            setDueDate(undefined);
         }
     };
 
@@ -33,10 +36,16 @@ export default function ShoppingListScreen() {
             />
 
             <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
+                behavior={"padding"}
+                keyboardVerticalOffset={120}
                 style={styles.inputContainer}
             >
+                <DatePickerInput
+                    date={dueDate}
+                    onDateChange={setDueDate}
+                    backgroundColor="#FF9800"
+                    iconColor="#000"
+                />
                 <TextInput
                     style={styles.input}
                     placeholder="New Item..."
@@ -53,7 +62,7 @@ export default function ShoppingListScreen() {
                     <Plus size={24} color="#000" />
                 </Pressable>
             </KeyboardAvoidingView>
-        </ScreenLayout>
+        </ScreenLayout >
     );
 }
 

@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { CheckSquare, StickyNote, ShoppingCart } from 'lucide-react-native';
+import { CheckSquare, StickyNote, ShoppingCart, Calendar } from 'lucide-react-native';
 
 export default function TabLayout() {
     return (
@@ -8,7 +8,7 @@ export default function TabLayout() {
             screenOptions={{
                 headerShown: true,
                 tabBarStyle: {
-                    paddingBottom: 8,
+                    height: 80,
                     paddingTop: 8,
                     backgroundColor: '#121212',
                     borderTopColor: '#333',
@@ -17,7 +17,10 @@ export default function TabLayout() {
                 tabBarInactiveTintColor: '#666',
                 headerStyle: {
                     backgroundColor: '#121212',
+                    borderBottomColor: '#333',
+                    borderBottomWidth: 1,
                 },
+                headerTitleAlign: "center",
                 headerTintColor: '#fff',
                 headerRightContainerStyle: {
                     paddingRight: 8,
@@ -45,6 +48,13 @@ export default function TabLayout() {
                 options={{
                     title: 'Shopping',
                     tabBarIcon: ({ color }) => <ShoppingCart size={24} color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="calendar"
+                options={{
+                    title: 'Calendar',
+                    tabBarIcon: ({ color }) => <Calendar size={24} color={color} />,
                 }}
             />
         </Tabs>

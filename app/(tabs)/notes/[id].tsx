@@ -5,6 +5,8 @@ import { useState, useLayoutEffect } from 'react';
 import { Trash2, Save, ArrowLeft } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 
+import { DatePickerInput } from '../../../modules/core/components/DatePickerInput';
+
 export default function NoteDetailScreen() {
     const { id } = useLocalSearchParams();
     const { notes, addNote, updateNote, deleteNote } = useStore();
@@ -18,8 +20,12 @@ export default function NoteDetailScreen() {
 
     const [title, setTitle] = useState(existingNote?.title || '');
     const [content, setContent] = useState(existingNote?.content || '');
+    const [dueDate, setDueDate] = useState<number | undefined>(existingNote?.dueDate);
 
     useLayoutEffect(() => {
+        // ... navigation options (keep as is, no changes needed for setOptions logic implicitly) 
+        // Actually I need to keep the navigation logic. I'll just replace the component body start and the return method.
+        // But replacing a large chunk might be safer.
         navigation.getParent()?.setOptions({
             title: isNew ? 'New Note' : 'Edit Note',
             headerLeft: () => (
@@ -50,15 +56,15 @@ export default function NoteDetailScreen() {
         return () => {
             navigation.getParent()?.setOptions({ title: 'Notes', headerRight: undefined, headerLeft: undefined });
         };
-    }, [navigation, isNew, title, content]);
+    }, [navigation, isNew, title, content, dueDate]); // Added dueDate to dependency
 
     const handleSave = () => {
         if (!title.trim() && !content.trim()) return;
 
         if (isNew) {
-            addNote(title, content);
+            addNote(title, content, dueDate);
         } else {
-            updateNote(noteId!, title, content);
+            updateNote(noteId!, title, content, dueDate);
         }
         router.back();
     };
@@ -79,6 +85,9 @@ export default function NoteDetailScreen() {
 
     return (
         <ScreenLayout style={styles.container}>
+            <View style={styles.dateContainer}>
+                <DatePickerInput date={dueDate} onDateChange={setDueDate} showDate={true} />
+            </View>
             <TextInput
                 style={styles.titleInput}
                 placeholder="Title"
@@ -101,7 +110,10 @@ export default function NoteDetailScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 16, // Override ScreenLayout padding top if needed, or stick to default
+        paddingTop: 16,
+    },
+    dateContainer: {
+        marginBottom: 16,
     },
     titleInput: {
         fontSize: 24,

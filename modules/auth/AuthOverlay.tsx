@@ -27,7 +27,7 @@ export function AuthOverlay({ children }: { children: React.ReactNode }) {
         <View style={styles.container}>
             <Lock size={64} color="#fff" />
             <Text style={styles.title}>Locked</Text>
-            <Button title="Unlock" onPress={authenticate} color="#fff" />
+            <Button title="Unlock" onPress={authenticate} color={"black"} />
         </View>
     );
 }

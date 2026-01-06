@@ -7,6 +7,7 @@ export type Todo = {
     text: string;
     completed: boolean;
     createdAt: number;
+    dueDate?: number;
 };
 
 export type Note = {
@@ -14,6 +15,7 @@ export type Note = {
     title: string;
     content: string;
     createdAt: number;
+    dueDate?: number;
 };
 
 export type ShoppingItem = {
@@ -22,19 +24,20 @@ export type ShoppingItem = {
     completed: boolean;
     category?: string; // Optional for now
     createdAt: number;
+    dueDate?: number;
 };
 
 type StoreState = {
     todos: Todo[];
     notes: Note[];
     shoppingList: ShoppingItem[];
-    addTodo: (text: string) => void;
+    addTodo: (text: string, dueDate?: number) => void;
     toggleTodo: (id: string) => void;
     deleteTodo: (id: string) => void;
-    addNote: (title: string, content: string) => void;
-    updateNote: (id: string, title: string, content: string) => void;
+    addNote: (title: string, content: string, dueDate?: number) => void;
+    updateNote: (id: string, title: string, content: string, dueDate?: number) => void;
     deleteNote: (id: string) => void;
-    addShoppingItem: (text: string) => void;
+    addShoppingItem: (text: string, dueDate?: number) => void;
     toggleShoppingItem: (id: string) => void;
     deleteShoppingItem: (id: string) => void;
 };
@@ -46,11 +49,11 @@ export const useStore = create<StoreState>()(
             notes: [],
             shoppingList: [],
 
-            addTodo: (text) =>
+            addTodo: (text, dueDate) =>
                 set((state) => ({
                     todos: [
                         ...state.todos,
-                        { id: Date.now().toString(), text, completed: false, createdAt: Date.now() },
+                        { id: Date.now().toString(), text, completed: false, createdAt: Date.now(), dueDate },
                     ],
                 })),
             toggleTodo: (id) =>
@@ -64,17 +67,17 @@ export const useStore = create<StoreState>()(
                     todos: state.todos.filter((t) => t.id !== id),
                 })),
 
-            addNote: (title, content) =>
+            addNote: (title, content, dueDate) =>
                 set((state) => ({
                     notes: [
                         ...state.notes,
-                        { id: Date.now().toString(), title, content, createdAt: Date.now() },
+                        { id: Date.now().toString(), title, content, createdAt: Date.now(), dueDate },
                     ],
                 })),
-            updateNote: (id, title, content) =>
+            updateNote: (id, title, content, dueDate) =>
                 set((state) => ({
                     notes: state.notes.map((n) =>
-                        n.id === id ? { ...n, title, content } : n
+                        n.id === id ? { ...n, title, content, ...(dueDate !== undefined && { dueDate }) } : n
                     ),
                 })),
             deleteNote: (id) =>
@@ -82,11 +85,11 @@ export const useStore = create<StoreState>()(
                     notes: state.notes.filter((n) => n.id !== id),
                 })),
 
-            addShoppingItem: (text) =>
+            addShoppingItem: (text, dueDate) =>
                 set((state) => ({
                     shoppingList: [
                         ...state.shoppingList,
-                        { id: Date.now().toString(), text, completed: false, createdAt: Date.now() },
+                        { id: Date.now().toString(), text, completed: false, createdAt: Date.now(), dueDate },
                     ],
                 })),
             toggleShoppingItem: (id) =>
