@@ -1,21 +1,20 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Button, Dimensions } from 'react-native';
-import { useBiometrics } from './useBiometrics';
+import { useLocalAuth } from './useLocalAuth';
 import { Lock } from 'lucide-react-native';
 
 export function AuthOverlay({ children }: { children: React.ReactNode }) {
-    const { isAuthenticated, isBiometricSupported, authenticate } = useBiometrics();
+    const { isAuthenticated, authType, loading, authenticate } = useLocalAuth();
     const [hasAttempted, setHasAttempted] = React.useState(false);
 
     useEffect(() => {
-        if (isBiometricSupported && !isAuthenticated && !hasAttempted) {
+        if (!loading && authType !== 'NONE' && !isAuthenticated && !hasAttempted) {
             setHasAttempted(true);
             authenticate();
         }
-    }, [isBiometricSupported, isAuthenticated, hasAttempted]);
+    }, [loading, authType, isAuthenticated, hasAttempted]);
 
-    // If biometrics not supported, bypass for now (or implement PIN later)
-    if (!isBiometricSupported) {
+    if (authType === 'NONE') {
         return <>{children}</>;
     }
 

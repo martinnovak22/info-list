@@ -23,9 +23,6 @@ export default function NoteDetailScreen() {
     const [dueDate, setDueDate] = useState<number | undefined>(existingNote?.dueDate);
 
     useLayoutEffect(() => {
-        // ... navigation options (keep as is, no changes needed for setOptions logic implicitly) 
-        // Actually I need to keep the navigation logic. I'll just replace the component body start and the return method.
-        // But replacing a large chunk might be safer.
         navigation.getParent()?.setOptions({
             title: isNew ? 'New Note' : 'Edit Note',
             headerLeft: () => (
@@ -56,7 +53,7 @@ export default function NoteDetailScreen() {
         return () => {
             navigation.getParent()?.setOptions({ title: 'Notes', headerRight: undefined, headerLeft: undefined });
         };
-    }, [navigation, isNew, title, content, dueDate]); // Added dueDate to dependency
+    }, [navigation, isNew, title, content, dueDate]);
 
     const handleSave = () => {
         if (!title.trim() && !content.trim()) return;
