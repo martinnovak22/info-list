@@ -65,16 +65,16 @@ export const DatePickerInput = ({ showDate = false, date, onDateChange, backgrou
 
             {show && (
                 Platform.OS === 'ios' ? (
-                    <Modal transparent={true} animationType="slide" visible={show}>
+                    <Modal transparent={true} animationType={"slide"} visible={show}>
                         <View style={styles.modalOverlay}>
                             <View style={styles.modalContent}>
                                 <DateTimePicker
-                                    testID="dateTimePicker"
+                                    testID={"dateTimePicker"}
                                     value={date ? new Date(date) : new Date()}
-                                    mode="date"
-                                    display="inline"
+                                    mode={"date"}
+                                    display={"inline"}
                                     onChange={onChange}
-                                    themeVariant="dark"
+                                    themeVariant={"dark"}
                                     style={styles.picker}
                                 />
                                 <Pressable onPress={() => setShow(false)} style={styles.closeButton}>
@@ -85,12 +85,12 @@ export const DatePickerInput = ({ showDate = false, date, onDateChange, backgrou
                     </Modal>
                 ) : (
                     <DateTimePicker
-                        testID="dateTimePicker"
+                        testID={"dateTimePicker"}
                         value={date ? new Date(date) : new Date()}
-                        mode="date"
+                        mode={"date"}
                         is24Hour={true}
                         onChange={onChange}
-                        themeVariant="dark"
+                        themeVariant={"dark"}
                     />
                 )
             )}

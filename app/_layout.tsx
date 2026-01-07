@@ -35,8 +35,8 @@ export default function RootLayout() {
         <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
             <AuthOverlay>
                 <Stack>
-                    <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                    <Stack.Screen name="+not-found" />
+                    <Stack.Screen name={"(tabs)"} options={{ headerShown: false }} />
+                    <Stack.Screen name={"+not-found"} />
                 </Stack>
                 <StatusBar style={isDark ? 'light' : 'dark'} />
             </AuthOverlay>

@@ -24,7 +24,7 @@ export const NoteItem = ({ note, onPress }: Props) => {
                     <Text style={styles.title} numberOfLines={1}>{note.title || 'Untitled'}</Text>
                     <Text style={styles.preview} numberOfLines={2}>{note.content}</Text>
                 </View>
-                <ChevronRight size={20} color="#666" />
+                <ChevronRight size={20} color={"#666"} />
             </Pressable>
         </Animated.View>
     );

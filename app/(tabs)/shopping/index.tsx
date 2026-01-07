@@ -43,13 +43,13 @@ export default function ShoppingListScreen() {
                 <DatePickerInput
                     date={dueDate}
                     onDateChange={setDueDate}
-                    backgroundColor="#FF9800"
-                    iconColor="#000"
+                    backgroundColor={"#FF9800"}
+                    iconColor={"#000"}
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="New Item..."
-                    placeholderTextColor="#666"
+                    placeholder={"New Item..."}
+                    placeholderTextColor={"#666"}
                     value={text}
                     onChangeText={setText}
                     onSubmitEditing={handleAdd}
@@ -59,7 +59,7 @@ export default function ShoppingListScreen() {
                     disabled={!text.trim()}
                     style={({ pressed }) => [styles.addButton, { opacity: pressed ? 0.7 : (text.trim() ? 1 : 0.5) }]}
                 >
-                    <Plus size={24} color="#000" />
+                    <Plus size={24} color={"#000"} />
                 </Pressable>
             </KeyboardAvoidingView>
         </ScreenLayout >

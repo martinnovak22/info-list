@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Button, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import { useLocalAuth } from './useLocalAuth';
 import { Lock } from 'lucide-react-native';
 
@@ -24,7 +24,7 @@ export function AuthOverlay({ children }: { children: React.ReactNode }) {
 
     return (
         <View style={styles.container}>
-            <Lock size={64} color="#fff" />
+            <Lock size={64} color={"#fff"} />
             <Text style={styles.title}>Locked</Text>
             <Button title="Unlock" onPress={authenticate} color={"black"} />
         </View>

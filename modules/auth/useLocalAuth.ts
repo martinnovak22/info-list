@@ -1,6 +1,5 @@
 import * as LocalAuthentication from 'expo-local-authentication';
 import { useState, useEffect, useCallback } from 'react';
-import { AppState } from 'react-native';
 
 export type AuthType = 'BIOMETRICS' | 'DEVICE_PASSCODE' | 'NONE';
 

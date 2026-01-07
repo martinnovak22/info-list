@@ -42,13 +42,13 @@ export default function TodoListScreen() {
                 <DatePickerInput
                     date={dueDate}
                     onDateChange={setDueDate}
-                    backgroundColor="#fff"
-                    iconColor="#000"
+                    backgroundColor={"#fff"}
+                    iconColor={"#000"}
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="New Todo..."
-                    placeholderTextColor="#666"
+                    placeholder={"New Todo..."}
+                    placeholderTextColor={"#666"}
                     value={text}
                     onChangeText={setText}
                     onSubmitEditing={handleAdd}
@@ -58,7 +58,7 @@ export default function TodoListScreen() {
                     disabled={!text.trim()}
                     style={({ pressed }) => [styles.addButton, { opacity: pressed ? 0.7 : (text.trim() ? 1 : 0.5) }]}
                 >
-                    <Plus size={24} color="#000" />
+                    <Plus size={24} color={"#000"} />
                 </Pressable>
             </KeyboardAvoidingView>
         </ScreenLayout>

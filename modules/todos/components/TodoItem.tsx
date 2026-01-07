@@ -23,9 +23,9 @@ export const TodoItem = ({ todo, onToggle, onDelete }: Props) => {
                 style={({ pressed }) => [styles.content, { opacity: pressed ? 0.7 : 1 }]}
             >
                 {todo.completed ? (
-                    <CheckCircle size={24} color="#4caf50" />
+                    <CheckCircle size={24} color={"#4caf50"} />
                 ) : (
-                    <Circle size={24} color="#666" />
+                    <Circle size={24} color={"#666"} />
                 )}
                 <Text style={[styles.text, todo.completed && styles.completedText]}>
                     {todo.text}
@@ -36,7 +36,7 @@ export const TodoItem = ({ todo, onToggle, onDelete }: Props) => {
                 hitSlop={10}
                 style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             >
-                <Trash2 size={20} color="#ff5252" />
+                <Trash2 size={20} color={"#ff5252"} />
             </Pressable>
         </Animated.View>
     );

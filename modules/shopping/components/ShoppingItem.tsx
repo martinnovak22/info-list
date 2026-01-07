@@ -34,7 +34,7 @@ export const ShoppingItem = ({ item, onToggle, onDelete }: Props) => {
                 hitSlop={10}
                 style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             >
-                <Trash2 size={20} color="#ff5252" />
+                <Trash2 size={20} color={"#ff5252"} />
             </Pressable>
         </Animated.View>
     );

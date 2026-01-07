@@ -63,13 +63,13 @@ export default function CalendarScreen() {
         let icon;
         let color;
         if (item.type === 'todo') {
-            icon = <CheckSquare size={20} color="#4caf50" />;
+            icon = <CheckSquare size={20} color={"#4caf50"} />;
             color = "#4caf50";
         } else if (item.type === 'note') {
-            icon = <StickyNote size={20} color="#ffeb3b" />;
+            icon = <StickyNote size={20} color={"#ffeb3b"} />;
             color = "#ffeb3b";
         } else {
-            icon = <ShoppingBag size={20} color="#ff9800" />;
+            icon = <ShoppingBag size={20} color={"#ff9800"} />;
             color = "#ff9800";
         }
 
