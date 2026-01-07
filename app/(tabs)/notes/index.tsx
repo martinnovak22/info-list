@@ -34,9 +34,9 @@ export default function NotesListScreen() {
 
             <Pressable
                 onPress={handleAdd}
-                style={({ pressed }) => [styles.fab, { opacity: pressed ? 0.7 : 1 }]}
+                style={({ pressed }) => [styles.fab, { opacity: pressed ? 0.8 : 1 }]}
             >
-                <Plus size={24} color="#000" />
+                <Plus size={32} color={"#fff"} />
             </Pressable>
         </ScreenLayout>
     );
@@ -50,17 +50,21 @@ const styles = StyleSheet.create({
 
     fab: {
         position: 'absolute',
-        bottom: 20,
-        right: 16,
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        backgroundColor: '#fff',
+        bottom: 24,
+        right: 24,
+        width: 64,
+        height: 64,
+        borderRadius: 32,
+        backgroundColor: '#4caf50',
         alignItems: 'center',
         justifyContent: 'center',
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOpacity: 0.3,
-        shadowOffset: { width: 0, height: 2 },
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.30,
+        shadowRadius: 4.65,
+        elevation: 8,
     },
 });

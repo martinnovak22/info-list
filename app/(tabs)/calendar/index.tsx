@@ -8,31 +8,32 @@ import { Pressable } from 'react-native';
 import { ShoppingBag, CheckSquare, StickyNote } from 'lucide-react-native';
 
 export default function CalendarScreen() {
-    const { todos, notes, shoppingList } = useStore();
+    const { items, notes, tags } = useStore();
     const router = useRouter();
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
     const markedDates = useMemo(() => {
         const marks: any = {};
 
-        // Helper to add marks
         const addMark = (date: number | undefined, color: string) => {
             if (!date) return;
             const dateStr = new Date(date).toISOString().split('T')[0];
             if (!marks[dateStr]) {
                 marks[dateStr] = { dots: [] };
             }
-            // Avoid duplicate colors for same day
             if (!marks[dateStr].dots.find((d: any) => d.color === color)) {
                 marks[dateStr].dots.push({ color });
             }
         };
 
-        todos.forEach(t => addMark(t.dueDate, '#4caf50')); // Green for todos
-        notes.forEach(n => addMark(n.dueDate, '#ffeb3b')); // Yellow for notes
-        shoppingList.forEach(i => addMark(i.dueDate, '#ff9800')); // Orange for shopping
+        items.forEach(item => {
+            const tag = tags.find(t => t.id === item.tagIds[0]);
+            const color = tag?.color || '#fff';
+            addMark(item.dueDate, color);
+        });
 
-        // Highlight selected date
+        notes.forEach(n => addMark(n.dueDate, '#ffeb3b'));
+
         if (marks[selectedDate]) {
             marks[selectedDate].selected = true;
             marks[selectedDate].selectedColor = '#333';
@@ -41,7 +42,7 @@ export default function CalendarScreen() {
         }
 
         return marks;
-    }, [todos, notes, shoppingList, selectedDate]);
+    }, [items, notes, tags, selectedDate]);
 
     const itemsForSelectedDate = useMemo(() => {
         const startOfDay = new Date(selectedDate).setHours(0, 0, 0, 0);
@@ -53,24 +54,22 @@ export default function CalendarScreen() {
         };
 
         return [
-            ...todos.filter(t => isSameDay(t.dueDate)).map(t => ({ ...t, type: 'todo' })),
+            ...items.filter(i => isSameDay(i.dueDate)).map(i => ({ ...i, type: 'task' })),
             ...notes.filter(n => isSameDay(n.dueDate)).map(n => ({ ...n, type: 'note' })),
-            ...shoppingList.filter(s => isSameDay(s.dueDate)).map(s => ({ ...s, type: 'shopping' })),
         ];
-    }, [selectedDate, todos, notes, shoppingList]);
+    }, [selectedDate, items, notes]);
 
     const renderItem = ({ item }: { item: any }) => {
         let icon;
         let color;
-        if (item.type === 'todo') {
-            icon = <CheckSquare size={20} color={"#4caf50"} />;
-            color = "#4caf50";
-        } else if (item.type === 'note') {
+
+        if (item.type === 'task') {
+            const tag = tags.find((t: any) => t.id === item.tagIds?.[0]);
+            color = tag?.color || '#fff';
+            icon = <CheckSquare size={20} color={color} />;
+        } else {
             icon = <StickyNote size={20} color={"#ffeb3b"} />;
             color = "#ffeb3b";
-        } else {
-            icon = <ShoppingBag size={20} color={"#ff9800"} />;
-            color = "#ff9800";
         }
 
         return (

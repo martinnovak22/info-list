@@ -1,66 +1,72 @@
-import { View, Text, StyleSheet, FlatList, TextInput, Pressable, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet, FlatList, Pressable, Platform, Text } from 'react-native';
 import { useStore } from '../../../modules/core/store';
-import { TodoItem } from '../../../modules/todos/components/TodoItem';
-import { useState } from 'react';
+import { TaskItem } from '../../../modules/core/components/TaskItem';
+import { TagSelector } from '../../../modules/core/components/TagSelector';
+import { useState, useMemo } from 'react';
 import { Plus } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
-import { DatePickerInput } from '../../../modules/core/components/DatePickerInput';
 import { EmptyState } from '../../../modules/core/components/EmptyState';
+import { AddTaskModal } from '../../../modules/core/components/AddTaskModal';
 
-export default function TodoListScreen() {
-    const { todos, addTodo, toggleTodo, deleteTodo } = useStore();
-    const [text, setText] = useState('');
-    const [dueDate, setDueDate] = useState<number | undefined>();
+export default function TasksScreen() {
+    const { items, tags, toggleItem, deleteItem } = useStore();
+    const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
+    const [isModalVisible, setModalVisible] = useState(false);
 
-    const handleAdd = () => {
-        if (text.trim()) {
-            addTodo(text.trim(), dueDate);
-            setText('');
-            setDueDate(undefined);
-        }
-    };
+    const filteredItems = useMemo(() => {
+        if (!selectedTagId) return items;
+        return items.filter(item => item.tagIds.includes(selectedTagId));
+    }, [items, selectedTagId]);
+
+    const currentTag = selectedTagId ? tags.find(t => t.id === selectedTagId) : null;
+    const headerText = currentTag ? currentTag.name : "All Tasks";
+    const fabColor = '#4caf50';
 
     return (
         <ScreenLayout>
+            <View style={styles.headerContainer}>
+                <Text style={[styles.headerTitle, { color: currentTag ? currentTag.color : '#fff' }]}>
+                    {headerText}
+                </Text>
+                {selectedTagId && (
+                    <Pressable onPress={() => setSelectedTagId(null)} hitSlop={10}>
+                        <Text style={styles.clearFilter}>Show All</Text>
+                    </Pressable>
+                )}
+            </View>
+
+            <TagSelector
+                selectedTagId={selectedTagId}
+                onSelectTag={setSelectedTagId}
+            />
+
             <FlatList
-                data={todos}
+                data={filteredItems}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <TodoItem todo={item} onToggle={toggleTodo} onDelete={deleteTodo} />
+                    <TaskItem item={item} tags={tags} onToggle={toggleItem} onDelete={deleteItem} />
                 )}
                 contentContainerStyle={styles.list}
                 ListEmptyComponent={
-                    <EmptyState text="No todos yet" />
+                    <EmptyState text={"No tasks found"} />
                 }
             />
 
-            <KeyboardAvoidingView
-                behavior={"padding"}
-                keyboardVerticalOffset={120}
-                style={styles.inputContainer}
+            <Pressable
+                style={({ pressed }) => [
+                    styles.fab,
+                    { backgroundColor: fabColor, opacity: pressed ? 0.8 : 1 }
+                ]}
+                onPress={() => setModalVisible(true)}
             >
-                <DatePickerInput
-                    date={dueDate}
-                    onDateChange={setDueDate}
-                    backgroundColor={"#fff"}
-                    iconColor={"#000"}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder={"New Todo..."}
-                    placeholderTextColor={"#666"}
-                    value={text}
-                    onChangeText={setText}
-                    onSubmitEditing={handleAdd}
-                />
-                <Pressable
-                    onPress={handleAdd}
-                    disabled={!text.trim()}
-                    style={({ pressed }) => [styles.addButton, { opacity: pressed ? 0.7 : (text.trim() ? 1 : 0.5) }]}
-                >
-                    <Plus size={24} color={"#000"} />
-                </Pressable>
-            </KeyboardAvoidingView>
+                <Plus size={32} color={"#fff"} />
+            </Pressable>
+
+            <AddTaskModal
+                visible={isModalVisible}
+                onClose={() => setModalVisible(false)}
+                defaultTagId={selectedTagId}
+            />
         </ScreenLayout>
     );
 }
@@ -69,32 +75,37 @@ const styles = StyleSheet.create({
     list: {
         paddingBottom: 100,
     },
-
-    inputContainer: {
-        position: 'absolute',
-        bottom: 20,
-        left: 16,
-        right: 16,
+    headerContainer: {
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        gap: 12,
+        marginBottom: 16,
     },
-    input: {
-        flex: 1,
-        backgroundColor: '#1E1E1E',
+    headerTitle: {
+        fontSize: 28,
+        fontWeight: 'bold',
         color: '#fff',
-        padding: 16,
-        borderRadius: 50,
-        fontSize: 16,
-        borderWidth: 1,
-        borderColor: '#333',
     },
-    addButton: {
-        backgroundColor: '#fff',
-        width: 56,
-        height: 56,
-        borderRadius: 28,
+    clearFilter: {
+        color: '#666',
+        fontSize: 14,
+    },
+    fab: {
+        position: 'absolute',
+        bottom: 24,
+        right: 24,
+        width: 64,
+        height: 64,
+        borderRadius: 32,
         alignItems: 'center',
         justifyContent: 'center',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 4,
+        },
+        shadowOpacity: 0.30,
+        shadowRadius: 4.65,
+        elevation: 8,
     },
 });

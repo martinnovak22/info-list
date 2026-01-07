@@ -8,10 +8,9 @@ type Props = {
     onDateChange: (date?: number) => void;
     backgroundColor?: string;
     iconColor?: string;
-    showDate?: boolean;
 };
 
-export const DatePickerInput = ({ showDate = false, date, onDateChange, backgroundColor = '#333', iconColor = '#fff' }: Props) => {
+export const DatePickerInput = ({ date, onDateChange, backgroundColor = '#333', iconColor = '#fff' }: Props) => {
     const [show, setShow] = useState(false);
 
     const onChange = (event: any, selectedDate?: Date) => {
@@ -32,34 +31,27 @@ export const DatePickerInput = ({ showDate = false, date, onDateChange, backgrou
         onDateChange(undefined);
     };
 
-    const formattedDate = date ? new Date(date).toLocaleDateString() : null;
+    const formattedDate = date ? new Date(date).toLocaleDateString() : 'Add Date';
 
     return (
         <View style={styles.container}>
             <Pressable
-                onPress={date ? clearDate : showDatepicker}
-                style={[styles.button, showDate ? styles.dateButton : undefined, { backgroundColor }]}
+                onPress={showDatepicker}
+                style={[styles.button, { backgroundColor }]}
             >
-                {date ? (
-                    showDate ? (
-                        <View style={styles.dateContent}>
-                            <CalendarIcon size={20} color={iconColor} style={{ marginRight: 8 }} />
-                            <Text style={[styles.dateText, { color: iconColor }]}>{formattedDate}</Text>
-                            <X size={20} color={iconColor} style={{ marginLeft: 8 }} />
-                        </View>
-                    ) : (
-                        <X size={24} color={iconColor} />
-                    )
-                ) : (
-                    showDate ? (
-                        <View style={styles.dateContent}>
-                            <CalendarIcon size={24} color={iconColor} style={{ marginRight: 8 }} />
-                            <Text style={[styles.dateText, { color: iconColor }]}>Add Date</Text>
-                        </View>
-                    ) : (
-                        <CalendarIcon size={24} color={iconColor} />
-                    )
-                )}
+                <View style={styles.content}>
+                    <CalendarIcon size={20} color={iconColor} style={{ marginRight: 8 }} />
+                    <Text style={[styles.text, { color: iconColor }]}>
+                        {formattedDate}
+                    </Text>
+                    {date && (
+                        <Pressable onPress={clearDate} style={styles.clearButton} hitSlop={10}>
+                            <X size={20} color={iconColor} />
+                        </Pressable>
+                    )}
+                </View>
+
+
             </Pressable>
 
 
@@ -75,7 +67,6 @@ export const DatePickerInput = ({ showDate = false, date, onDateChange, backgrou
                                     display={"inline"}
                                     onChange={onChange}
                                     themeVariant={"dark"}
-                                    style={styles.picker}
                                 />
                                 <Pressable onPress={() => setShow(false)} style={styles.closeButton}>
                                     <Text style={styles.closeButtonText}>Done</Text>
@@ -104,24 +95,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        width: 56,
-        height: 56,
-        borderRadius: 28,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    dateButton: {
-        width: 'auto',
-        paddingHorizontal: 16,
-        alignSelf: 'flex-start',
-    },
-    dateContent: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderRadius: 24,
+        minWidth: 140,
     },
-    dateText: {
-        fontSize: 16,
-        fontWeight: '500',
+    content: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        minHeight: 28,
+    },
+    text: {
+        fontSize: 14,
+        fontWeight: '600',
+    },
+    clearButton: {
+        padding: 4,
+        paddingRight: 0,
     },
     modalOverlay: {
         flex: 1,
@@ -135,9 +128,6 @@ const styles = StyleSheet.create({
         padding: 16,
         paddingBottom: 32,
         alignItems: 'center',
-    },
-    picker: {
-        width: '100%',
     },
     closeButton: {
         marginTop: 16,
