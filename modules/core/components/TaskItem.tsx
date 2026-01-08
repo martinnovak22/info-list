@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Item, Tag } from '../store';
 import { Trash2, CheckCircle, Circle } from 'lucide-react-native';
 import Animated, { FadeIn, FadeOut, Layout, LinearTransition } from 'react-native-reanimated';
+import { useToastStore } from '../store/toastStore';
+import { cancelTaskNotification, scheduleTaskNotification } from '../utils/notifications';
 
 type Props = {
     item: Item;
@@ -12,6 +14,25 @@ type Props = {
 };
 
 export const TaskItem = ({ item, tags, onToggle, onDelete }: Props) => {
+    const { showToast } = useToastStore();
+
+    const handleToggle = () => {
+        onToggle(item.id);
+        if (!item.completed) {
+            cancelTaskNotification(item.id);
+            showToast('Task completed!', 'success');
+        } else {
+            if (item.dueDate && item.dueDate > Date.now()) {
+                scheduleTaskNotification(item.id, item.text, item.dueDate);
+            }
+        }
+    };
+
+    const handleDelete = () => {
+        onDelete(item.id);
+        cancelTaskNotification(item.id);
+        showToast('Task deleted', 'info');
+    };
     const primaryTagId = item.tagIds[0];
     const primaryTag = tags.find(t => t.id === primaryTagId);
     const color = primaryTag?.color || '#666';
@@ -26,7 +47,7 @@ export const TaskItem = ({ item, tags, onToggle, onDelete }: Props) => {
             exiting={FadeOut}
         >
             <Pressable
-                onPress={() => onToggle(item.id)}
+                onPress={handleToggle}
                 style={({ pressed }) => [styles.content, { opacity: pressed ? 0.7 : 1 }]}
             >
                 {item.completed ? (
@@ -53,7 +74,7 @@ export const TaskItem = ({ item, tags, onToggle, onDelete }: Props) => {
             </Pressable>
 
             <Pressable
-                onPress={() => onDelete(item.id)}
+                onPress={handleDelete}
                 hitSlop={10}
                 style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             >

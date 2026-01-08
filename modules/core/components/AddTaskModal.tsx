@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, Modal, TextInput, Pressable, ScrollView, Platfo
 import { useStore } from '../store';
 import { DatePickerInput } from './DatePickerInput';
 import { X } from 'lucide-react-native';
+import { scheduleTaskNotification } from '../utils/notifications';
+import { useToastStore } from '../store/toastStore';
 
 type Props = {
     visible: boolean;
@@ -12,6 +14,7 @@ type Props = {
 
 export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
     const { tags, addItem } = useStore();
+    const { showToast } = useToastStore();
     const [text, setText] = useState('');
     const [selectedTagId, setSelectedTagId] = useState<string>(defaultTagId || '1');
     const [dueDate, setDueDate] = useState<number | undefined>();
@@ -24,7 +27,15 @@ export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
 
     const handleAdd = () => {
         if (text.trim()) {
-            addItem(text.trim(), [selectedTagId], dueDate);
+            const id = Date.now().toString();
+
+            addItem(text.trim(), [selectedTagId], dueDate, id);
+
+            if (dueDate) {
+                scheduleTaskNotification(id, text.trim(), dueDate);
+            }
+
+            showToast('Task added', 'success');
             reset();
             onClose();
         }

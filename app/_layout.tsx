@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import { useColorScheme } from 'react-native';
 import { AuthOverlay } from '../modules/auth/AuthOverlay';
+import { Toast } from '../modules/core/components/Toast';
+import { requestNotificationPermissions } from '../modules/core/utils/notifications';
 
 
 export default function RootLayout() {
@@ -15,6 +17,9 @@ export default function RootLayout() {
     useEffect(() => {
         // Attempt to hide immediately
         SplashScreen.hideAsync().catch(() => { });
+
+        // Request notification permissions
+        requestNotificationPermissions();
 
         // Safety timeout
         const timeout = setTimeout(() => {
@@ -39,6 +44,7 @@ export default function RootLayout() {
                     <Stack.Screen name={"+not-found"} />
                 </Stack>
                 <StatusBar style={isDark ? 'light' : 'dark'} />
+                <Toast />
             </AuthOverlay>
         </ThemeProvider>
     );

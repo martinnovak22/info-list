@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Pressable, Modal, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Pressable, Modal, TextInput } from 'react-native';
 import { Tag, useStore } from '../store';
+import { useToastStore } from '../store/toastStore';
 import { Plus, X } from 'lucide-react-native';
 
 type Props = {
@@ -12,6 +13,7 @@ const COLORS = ['#4caf50', '#ff9800', '#f44336', '#2196f3', '#9c27b0', '#00bcd4'
 
 export const TagSelector = ({ selectedTagId, onSelectTag }: Props) => {
     const { tags, addTag, deleteTag } = useStore();
+    const { showToast } = useToastStore();
     const [showModal, setShowModal] = useState(false);
     const [newTagName, setNewTagName] = useState('');
     const [selectedColor, setSelectedColor] = useState(COLORS[0]);
@@ -21,31 +23,30 @@ export const TagSelector = ({ selectedTagId, onSelectTag }: Props) => {
             addTag(newTagName.trim(), selectedColor);
             setNewTagName('');
             setShowModal(false);
+            showToast('Tag created successfully', 'success');
         }
     };
 
     const handleLongPress = (tag: Tag) => {
         if (tag.id === '1' || tag.id === '2') {
-            Alert.alert("Cannot Delete", "The default 'Tasks' and 'Shopping' tags cannot be deleted.");
+            showToast("Default tags cannot be deleted", "error");
             return;
         }
 
-        Alert.alert(
-            "Delete Tag",
-            `Are you sure you want to delete "${tag.name}"?`,
-            [
-                { text: "Cancel", style: "cancel" },
-                {
-                    text: "Delete",
-                    style: "destructive",
-                    onPress: () => {
-                        if (selectedTagId === tag.id) {
-                            onSelectTag(null);
-                        }
-                        deleteTag(tag.id);
+        showToast(
+            `Delete "${tag.name}"?`,
+            'info',
+            {
+                label: 'DELETE',
+                onPress: () => {
+                    if (selectedTagId === tag.id) {
+                        onSelectTag(null);
                     }
+                    deleteTag(tag.id);
+                    showToast(`Tag "${tag.name}" deleted`, "success");
                 }
-            ]
+            },
+            6000
         );
     };
 

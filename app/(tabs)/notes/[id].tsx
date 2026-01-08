@@ -4,6 +4,8 @@ import { useStore } from '../../../modules/core/store';
 import { useState, useLayoutEffect } from 'react';
 import { Trash2, Save, ArrowLeft } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
+import { useToastStore } from '../../../modules/core/store/toastStore';
+import { cancelTaskNotification, scheduleTaskNotification } from '../../../modules/core/utils/notifications';
 
 import { DatePickerInput } from '../../../modules/core/components/DatePickerInput';
 
@@ -55,35 +57,40 @@ export default function NoteDetailScreen() {
         };
     }, [navigation, isNew, title, content, dueDate]);
 
+    const { showToast } = useToastStore();
+
     const handleSave = () => {
         if (!title.trim() && !content.trim()) return;
 
+        const id = isNew ? Date.now().toString() : noteId!;
+
         if (isNew) {
-            addNote(title, content, dueDate);
+            addNote(title, content, dueDate, id);
+            showToast('Note created', 'success');
         } else {
             updateNote(noteId!, title, content, dueDate);
+            showToast('Note updated', 'success');
+            cancelTaskNotification(noteId!);
         }
+
+        if (dueDate) {
+            scheduleTaskNotification(id, title || 'Note Reminder', dueDate);
+        }
+
         router.back();
     };
 
     const handleDelete = () => {
-        Alert.alert('Delete Note', 'Are you sure?', [
-            { text: 'Cancel', style: 'cancel' },
-            {
-                text: 'Delete',
-                style: 'destructive',
-                onPress: () => {
-                    deleteNote(noteId!);
-                    router.back();
-                }
-            },
-        ]);
+        deleteNote(noteId!);
+        cancelTaskNotification(noteId!);
+        showToast('Note deleted', 'info');
+        router.back();
     };
 
     return (
         <ScreenLayout style={styles.container}>
             <View style={styles.dateContainer}>
-                <DatePickerInput date={dueDate} onDateChange={setDueDate} showDate={true} />
+                <DatePickerInput date={dueDate} onDateChange={setDueDate} />
             </View>
             <TextInput
                 style={styles.titleInput}

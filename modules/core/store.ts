@@ -38,11 +38,11 @@ type StoreState = {
     addTag: (name: string, color: string) => void;
     deleteTag: (id: string) => void;
 
-    addItem: (text: string, tagIds: string[], dueDate?: number) => void;
+    addItem: (text: string, tagIds: string[], dueDate?: number, id?: string) => void;
     toggleItem: (id: string) => void;
     deleteItem: (id: string) => void;
 
-    addNote: (title: string, content: string, dueDate?: number) => void;
+    addNote: (title: string, content: string, dueDate?: number, id?: string) => void;
     updateNote: (id: string, title: string, content: string, dueDate?: number) => void;
     deleteNote: (id: string) => void;
 };
@@ -66,11 +66,11 @@ export const useStore = create<StoreState>()(
                 // Optionally remove tag from items? For now let's leave them, simple logic.
             })),
 
-            addItem: (text, tagIds, dueDate) =>
+            addItem: (text, tagIds, dueDate, id) =>
                 set((state) => ({
                     items: [
                         ...state.items,
-                        { id: Date.now().toString(), text, completed: false, createdAt: Date.now(), dueDate, tagIds },
+                        { id: id || Date.now().toString(), text, completed: false, createdAt: Date.now(), dueDate, tagIds },
                     ],
                 })),
 
@@ -86,11 +86,11 @@ export const useStore = create<StoreState>()(
                     items: state.items.filter((i) => i.id !== id),
                 })),
 
-            addNote: (title, content, dueDate) =>
+            addNote: (title, content, dueDate, id) =>
                 set((state) => ({
                     notes: [
                         ...state.notes,
-                        { id: Date.now().toString(), title, content, createdAt: Date.now(), dueDate },
+                        { id: id || Date.now().toString(), title, content, createdAt: Date.now(), dueDate },
                     ],
                 })),
             updateNote: (id, title, content, dueDate) =>
