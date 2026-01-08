@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Item, Tag } from '../store';
 import { Trash2, CheckCircle, Circle } from 'lucide-react-native';
-import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, Layout, LinearTransition } from 'react-native-reanimated';
 
 type Props = {
     item: Item;
@@ -21,7 +21,7 @@ export const TaskItem = ({ item, tags, onToggle, onDelete }: Props) => {
     return (
         <Animated.View
             style={[styles.container, { borderLeftColor: color }]}
-            layout={Layout.springify()}
+            layout={LinearTransition.springify()}
             entering={FadeIn}
             exiting={FadeOut}
         >

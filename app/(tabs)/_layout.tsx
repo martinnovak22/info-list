@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { CheckSquare, StickyNote, Calendar } from 'lucide-react-native';
+import { CheckSquare, StickyNote, Calendar, Search as SearchIcon } from 'lucide-react-native';
 
 export default function TabLayout() {
     return (
@@ -48,6 +48,13 @@ export default function TabLayout() {
                 options={{
                     title: 'Calendar',
                     tabBarIcon: ({ color }) => <Calendar size={24} color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="search/index"
+                options={{
+                    title: 'Search',
+                    tabBarIcon: ({ color }) => <SearchIcon size={24} color={color} />,
                 }}
             />
         </Tabs>
