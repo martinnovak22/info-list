@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Item, Tag } from '../store';
 import { Trash2, CheckCircle, Circle } from 'lucide-react-native';
-import Animated, { FadeIn, FadeOut, Layout, LinearTransition } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { useToastStore } from '../store/toastStore';
 import { cancelTaskNotification, scheduleTaskNotification } from '../utils/notifications';
 
