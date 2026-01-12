@@ -1,8 +1,8 @@
-import { View, StyleSheet, FlatList, Pressable, Platform, Text } from 'react-native';
+import { View, StyleSheet, FlatList, Pressable, Text } from 'react-native';
 import { useStore } from '../../../modules/core/store/store';
 import { TaskItem } from '../../../modules/core/components/TaskItem';
 import { TagSelector } from '../../../modules/core/components/TagSelector';
-import { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Plus } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 import { EmptyState } from '../../../modules/core/components/EmptyState';
@@ -10,34 +10,82 @@ import { AddTaskModal } from '../../../modules/core/components/AddTaskModal';
 
 export default function TasksScreen() {
     const { items, tags, toggleItem, deleteItem } = useStore();
+
     const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
+    const [showUntagged, setShowUntagged] = useState(false);
+    const [status, setStatus] = useState<'active' | 'finished'>('active');
     const [isModalVisible, setModalVisible] = useState(false);
 
     const filteredItems = useMemo(() => {
-        if (!selectedTagId) return items;
-        return items.filter(item => item.tagIds.includes(selectedTagId));
-    }, [items, selectedTagId]);
+        if (status === 'finished') {
+            return items.filter((item) => item.completed);
+        }
 
-    const currentTag = selectedTagId ? tags.find(t => t.id === selectedTagId) : null;
-    const headerText = currentTag ? currentTag.name : "All Tasks";
-    const fabColor = '#4caf50';
+        if (showUntagged) {
+            return items.filter((item) => !item.completed && item.tagIds.length === 0);
+        }
+
+        if (!selectedTagId) {
+            return items.filter((item) => !item.completed);
+        }
+
+        return items.filter((item) => !item.completed && item.tagIds.includes(selectedTagId));
+    }, [items, selectedTagId, showUntagged, status]);
+
+    const selectStatus = (next: 'active' | 'finished') => {
+        if (next === 'finished') {
+            setSelectedTagId(null);
+            setShowUntagged(false);
+        }
+        setStatus(next);
+    };
+
+    const handleSelectTag = (id: string | null) => {
+        setStatus('active');
+        if (id !== null) {
+            setShowUntagged(false);
+        }
+        setSelectedTagId(id);
+    };
+
+    const toggleUntagged = () => {
+        setStatus('active');
+        setSelectedTagId(null);
+        setShowUntagged((prev) => !prev);
+    };
 
     return (
         <ScreenLayout>
-            <View style={styles.headerContainer}>
-                <Text style={[styles.headerTitle, { color: currentTag ? currentTag.color : '#fff' }]}>
-                    {headerText}
-                </Text>
-                {selectedTagId && (
-                    <Pressable onPress={() => setSelectedTagId(null)} hitSlop={10}>
-                        <Text style={styles.clearFilter}>Show All</Text>
-                    </Pressable>
-                )}
+
+            <View style={styles.segmented}>
+                <Pressable
+                    onPress={() => selectStatus('active')}
+                    style={({ pressed }) => [
+                        styles.segment,
+                        status === 'active' && styles.segmentSelected,
+                        { opacity: pressed ? 0.85 : 1 },
+                    ]}
+                >
+                    <Text style={[styles.segmentText, status === 'active' && styles.segmentTextSelected]}>{'Active'}</Text>
+                </Pressable>
+
+                <Pressable
+                    onPress={() => selectStatus('finished')}
+                    style={({ pressed }) => [
+                        styles.segment,
+                        status === 'finished' && styles.segmentSelected,
+                        { opacity: pressed ? 0.85 : 1 },
+                    ]}
+                >
+                    <Text style={[styles.segmentText, status === 'finished' && styles.segmentTextSelected]}>{'Finished'}</Text>
+                </Pressable>
             </View>
 
             <TagSelector
                 selectedTagId={selectedTagId}
-                onSelectTag={setSelectedTagId}
+                onSelectTag={handleSelectTag}
+                showUntagged={showUntagged}
+                onToggleUntagged={toggleUntagged}
             />
 
             <FlatList
@@ -47,19 +95,17 @@ export default function TasksScreen() {
                     <TaskItem item={item} tags={tags} onToggle={toggleItem} onDelete={deleteItem} />
                 )}
                 contentContainerStyle={styles.list}
-                ListEmptyComponent={
-                    <EmptyState text={"No tasks found"} />
-                }
+                ListEmptyComponent={<EmptyState text={'No tasks found'} />}
             />
 
             <Pressable
                 style={({ pressed }) => [
                     styles.fab,
-                    { backgroundColor: fabColor, opacity: pressed ? 0.8 : 1 }
+                    { backgroundColor: '#4caf50', opacity: pressed ? 0.8 : 1 },
                 ]}
                 onPress={() => setModalVisible(true)}
             >
-                <Plus size={32} color={"#fff"} />
+                <Plus size={32} color={'#fff'} />
             </Pressable>
 
             <AddTaskModal
@@ -74,17 +120,6 @@ export default function TasksScreen() {
 const styles = StyleSheet.create({
     list: {
         paddingBottom: 100,
-    },
-    headerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 16,
-    },
-    headerTitle: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: '#fff',
     },
     clearFilter: {
         color: '#666',
@@ -107,5 +142,33 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.30,
         shadowRadius: 4.65,
         elevation: 8,
+    },
+    segmented: {
+        flexDirection: 'row',
+        backgroundColor: '#1E1E1E',
+        borderRadius: 14,
+        padding: 4,
+        borderWidth: 1,
+        borderColor: '#2a2a2a',
+        marginBottom: 12,
+    },
+    segment: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10,
+        borderRadius: 10,
+    },
+    segmentSelected: {
+        backgroundColor: '#2C2C2E',
+    },
+    segmentText: {
+        color: '#9a9a9a',
+        fontWeight: '800',
+        fontSize: 13,
+        letterSpacing: 0.2,
+    },
+    segmentTextSelected: {
+        color: '#fff',
     },
 });

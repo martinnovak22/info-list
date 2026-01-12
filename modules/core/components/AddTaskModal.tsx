@@ -16,20 +16,20 @@ export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
     const { tags, addItem } = useStore();
     const { showToast } = useToastStore();
     const [text, setText] = useState('');
-    const [selectedTagId, setSelectedTagId] = useState<string>(defaultTagId || '1');
+    const [selectedTagId, setSelectedTagId] = useState<string | null>(defaultTagId ?? null);
     const [dueDate, setDueDate] = useState<number | undefined>();
 
     const reset = () => {
         setText('');
         setDueDate(undefined);
-        setSelectedTagId(defaultTagId || '1');
+        setSelectedTagId(defaultTagId ?? null);
     };
 
     const handleAdd = () => {
         if (text.trim()) {
             const id = Date.now().toString();
 
-            addItem(text.trim(), [selectedTagId], dueDate, id);
+            addItem(text.trim(), selectedTagId ? [selectedTagId] : [], dueDate, id);
 
             if (dueDate) {
                 scheduleTaskNotification(id, text.trim(), dueDate);
@@ -54,13 +54,13 @@ export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
             >
                 <View style={styles.content}>
                     <View style={styles.header}>
-                        <Text style={styles.title}>New Item</Text>
+                        <Text style={styles.title}>{'New Item'}</Text>
                         <Pressable onPress={handleClose}>
                             <X size={24} color={"#fff"} />
                         </Pressable>
                     </View>
 
-                    <Text style={styles.label}>Description</Text>
+                    <Text style={styles.label}>{'Description'}</Text>
                     <TextInput
                         style={styles.input}
                         placeholder={"What needs to be done?"}
@@ -70,8 +70,23 @@ export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
                         autoFocus={true}
                     />
 
-                    <Text style={styles.label}>Tag</Text>
+                    <Text style={styles.label}>{'Tag'}</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tagScroll}>
+                        <Pressable
+                            style={[
+                                styles.tag,
+                                selectedTagId === null && styles.noneTagSelected,
+                            ]}
+                            onPress={() => setSelectedTagId(null)}
+                        >
+                            <Text style={[
+                                styles.tagText,
+                                selectedTagId === null && styles.noneTagTextSelected,
+                            ]}>
+                                {'None'}
+                            </Text>
+                        </Pressable>
+
                         {tags.map(tag => (
                             <Pressable
                                 key={tag.id}
@@ -91,7 +106,7 @@ export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
                         ))}
                     </ScrollView>
 
-                    <Text style={styles.label}>Due Date (Optional)</Text>
+                    <Text style={styles.label}>{'Due Date (Optional)'}</Text>
                     <View style={styles.dateContainer}>
                         <DatePickerInput
                             date={dueDate}
@@ -106,7 +121,7 @@ export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
                         onPress={handleAdd}
                         disabled={!text.trim()}
                     >
-                        <Text style={styles.addButtonText}>Create Task</Text>
+                        <Text style={styles.addButtonText}>{'Create Task'}</Text>
                     </Pressable>
                 </View>
             </KeyboardAvoidingView>
@@ -167,6 +182,13 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 14,
         fontWeight: '600',
+    },
+    noneTagSelected: {
+        backgroundColor: '#333',
+        borderColor: '#333',
+    },
+    noneTagTextSelected: {
+        color: '#fff',
     },
     dateContainer: {
         alignItems: 'flex-start',

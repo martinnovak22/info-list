@@ -48,9 +48,6 @@ export const mergeItems = (
                 : undefined;
 
         if (existing) {
-            // Defaults:
-            // - dueDate: if empty in CSV -> keep existing
-            // - tags: if empty in CSV -> keep existing
             const merged: Item = {
                 ...existing,
                 completed: imp.completed,
@@ -94,8 +91,6 @@ export const mergeNotes = (
         const existing = noteByKey.get(key);
 
         if (existing) {
-            // Defaults:
-            // - dueDate empty -> keep existing
             const merged: Note = {
                 ...existing,
                 content: imp.content,
