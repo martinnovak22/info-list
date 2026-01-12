@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Pressable, Modal, TextInput } from 'react-native';
-import { Tag, useStore } from '../store';
+import { Tag, useStore } from '../store/store';
 import { useToastStore } from '../store/toastStore';
 import { Plus, X } from 'lucide-react-native';
 

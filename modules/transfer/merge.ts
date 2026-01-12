@@ -1,4 +1,4 @@
-import type { Item, Note, Tag } from '../core/store';
+import type { Item, Note, Tag } from '../core/store/store';
 import { normalizeKey } from './normalize';
 import type { ImportedItem } from './csvItem';
 import type { ImportedNote } from './csvNote';

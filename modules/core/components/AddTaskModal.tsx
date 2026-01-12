@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Modal, TextInput, Pressable, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
-import { useStore } from '../store';
+import { useStore } from '../store/store';
 import { DatePickerInput } from './DatePickerInput';
 import { X } from 'lucide-react-native';
 import { scheduleTaskNotification } from '../utils/notifications';

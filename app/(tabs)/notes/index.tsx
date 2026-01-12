@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, FlatList, Pressable } from 'react-native';
-import { useStore } from '../../../modules/core/store';
+import { useStore } from '../../../modules/core/store/store';
 import { NoteItem } from '../../../modules/notes/components/NoteItem';
 import { useRouter } from 'expo-router';
 import { Plus } from 'lucide-react-native';

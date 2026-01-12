@@ -1,5 +1,5 @@
 import { View, StyleSheet, FlatList, Pressable, Platform, Text } from 'react-native';
-import { useStore } from '../../../modules/core/store';
+import { useStore } from '../../../modules/core/store/store';
 import { TaskItem } from '../../../modules/core/components/TaskItem';
 import { TagSelector } from '../../../modules/core/components/TagSelector';
 import { useState, useMemo } from 'react';

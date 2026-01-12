@@ -1,6 +1,6 @@
 import { TextInput, StyleSheet, Alert, View, Pressable, Text } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack, useNavigation } from 'expo-router';
-import { useStore } from '../../../modules/core/store';
+import { useStore } from '../../../modules/core/store/store';
 import { useState, useLayoutEffect } from 'react';
 import { Trash2, Save, ArrowLeft } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';

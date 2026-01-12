@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import type { Note } from '../core/store';
+import type { Note } from '../core/store/store';
 import { NOTES_COLUMNS } from './csvSchema';
 
 type NoteCsvRow = {

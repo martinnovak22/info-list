@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { Calendar, DateData } from 'react-native-calendars';
-import { useStore } from '../../../modules/core/store';
+import { useStore } from '../../../modules/core/store/store';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 import { useRouter } from 'expo-router';
 import { Pressable } from 'react-native';

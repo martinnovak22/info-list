@@ -1,4 +1,4 @@
-import { useStore } from '../core/store';
+import { useStore } from '../core/store/store';
 import { exportCsvFile, pickCsvAndRead } from './fileIO';
 import { itemsToCsv, csvToItems } from './csvItem';
 import { notesToCsv, csvToNotes } from './csvNote';

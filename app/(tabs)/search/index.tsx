@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, TextInput, SectionList, Text, Pressable } from 'react-native';
-import { useStore, Item, Note } from '../../../modules/core/store';
+import { useStore, Item, Note } from '../../../modules/core/store/store';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 import { TaskItem } from '../../../modules/core/components/TaskItem';
 import { NoteItem } from '../../../modules/notes/components/NoteItem';

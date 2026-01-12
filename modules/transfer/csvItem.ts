@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import type { Item, Tag } from "../core/store";
+import type { Item, Tag } from "../core/store/store";
 import { ITEMS_COLUMNS } from './csvSchema';
 
 type ItemCsvRow = {
