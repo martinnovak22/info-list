@@ -9,53 +9,67 @@ import { EmptyState } from '../../../modules/core/components/EmptyState';
 import { AddTaskModal } from '../../../modules/core/components/AddTaskModal';
 
 export default function TasksScreen() {
-    const { items, tags, toggleItem, deleteItem } = useStore();
+    const {
+        items,
+        tags,
+        toggleItem,
+        deleteItem,
+        autoDeleteFinishedEnabled,
+        autoDeleteFinishedAfterDays,
+        cleanupFinishedItems,
+    } = useStore();
 
     const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
     const [showUntagged, setShowUntagged] = useState(false);
     const [status, setStatus] = useState<'active' | 'finished'>('active');
     const [isModalVisible, setModalVisible] = useState(false);
 
-    const filteredItems = useMemo(() => {
-        if (status === 'finished') {
-            return items.filter((item) => item.completed);
+    React.useEffect(() => {
+        if (autoDeleteFinishedEnabled) {
+            cleanupFinishedItems();
         }
+    }, [autoDeleteFinishedEnabled, autoDeleteFinishedAfterDays, cleanupFinishedItems]);
+
+    const filteredItems = useMemo(() => {
+        const base =
+            status === 'finished'
+                ? items.filter((item) => item.completed)
+                : items.filter((item) => !item.completed);
 
         if (showUntagged) {
-            return items.filter((item) => !item.completed && item.tagIds.length === 0);
+            return base.filter((item) => item.tagIds.length === 0);
         }
 
-        if (!selectedTagId) {
-            return items.filter((item) => !item.completed);
+        if (selectedTagId) {
+            return base.filter((item) => item.tagIds.includes(selectedTagId));
         }
 
-        return items.filter((item) => !item.completed && item.tagIds.includes(selectedTagId));
+        return base;
     }, [items, selectedTagId, showUntagged, status]);
 
     const selectStatus = (next: 'active' | 'finished') => {
-        if (next === 'finished') {
-            setSelectedTagId(null);
-            setShowUntagged(false);
-        }
         setStatus(next);
     };
 
     const handleSelectTag = (id: string | null) => {
-        setStatus('active');
-        if (id !== null) {
-            setShowUntagged(false);
-        }
+        setShowUntagged(false);
         setSelectedTagId(id);
     };
 
     const toggleUntagged = () => {
-        setStatus('active');
         setSelectedTagId(null);
         setShowUntagged((prev) => !prev);
     };
 
     return (
         <ScreenLayout>
+
+            <TagSelector
+                selectedTagId={selectedTagId}
+                onSelectTag={handleSelectTag}
+                showUntagged={showUntagged}
+                onToggleUntagged={toggleUntagged}
+            />
 
             <View style={styles.segmented}>
                 <Pressable
@@ -80,13 +94,6 @@ export default function TasksScreen() {
                     <Text style={[styles.segmentText, status === 'finished' && styles.segmentTextSelected]}>{'Finished'}</Text>
                 </Pressable>
             </View>
-
-            <TagSelector
-                selectedTagId={selectedTagId}
-                onSelectTag={handleSelectTag}
-                showUntagged={showUntagged}
-                onToggleUntagged={toggleUntagged}
-            />
 
             <FlatList
                 data={filteredItems}
@@ -113,6 +120,7 @@ export default function TasksScreen() {
                 onClose={() => setModalVisible(false)}
                 defaultTagId={selectedTagId}
             />
+
         </ScreenLayout>
     );
 }

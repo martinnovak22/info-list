@@ -67,11 +67,13 @@ export const TagSelector = ({
 
     return (
         <View style={styles.container}>
+            <Text style={styles.header}>{'Categories:'}</Text>
             <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.scroll}
             >
+
                 <Pressable
                     style={[
                         styles.chip,
@@ -79,13 +81,26 @@ export const TagSelector = ({
                         allSelected && styles.chipAllSelected,
                     ]}
                     onPress={() => {
-                        onSelectTag(null);
                         if (showUntagged) {
                             onToggleUntagged?.();
+                            return;
                         }
+
+                        onSelectTag(null);
                     }}
                 >
                     <Text style={[styles.chipText, allSelected && styles.chipTextSelected]}>{'All'}</Text>
+                </Pressable>
+
+                <Pressable
+                    style={[
+                        styles.chip,
+                        showUntagged ? styles.chipSelected : styles.chipUnselected,
+                        showUntagged && styles.chipAllSelected,
+                    ]}
+                    onPress={() => onToggleUntagged?.()}
+                >
+                    <Text style={[styles.chipText, showUntagged && styles.chipTextSelected]}>{'None'}</Text>
                 </Pressable>
 
                 {tagChips.map((tag) => {
@@ -109,16 +124,7 @@ export const TagSelector = ({
                     );
                 })}
 
-                <Pressable
-                    style={[
-                        styles.chip,
-                        showUntagged ? styles.chipSelected : styles.chipUnselected,
-                        showUntagged && styles.chipAllSelected,
-                    ]}
-                    onPress={() => onToggleUntagged?.()}
-                >
-                    <Text style={[styles.chipText, showUntagged && styles.chipTextSelected]}>{'Unlabeled'}</Text>
-                </Pressable>
+
 
                 <Pressable
                     onPress={() => setShowModal(true)}
@@ -208,6 +214,12 @@ const styles = StyleSheet.create({
     },
     chipTextSelected: {
         color: '#fff',
+    },
+    header:{
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 6,
     },
     addButton: {
         width: 34,

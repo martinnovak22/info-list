@@ -10,6 +10,12 @@ export default function SettingsScreen() {
     const [busy, setBusy] = React.useState<{ items?: boolean; notes?: boolean }>({});
     const { showToast } = useToastStore();
 
+    const autoDeleteFinishedEnabled = useStore((state) => state.autoDeleteFinishedEnabled);
+    const autoDeleteFinishedAfterDays = useStore((state) => state.autoDeleteFinishedAfterDays);
+    const setAutoDeleteFinishedEnabled = useStore((state) => state.setAutoDeleteFinishedEnabled);
+    const setAutoDeleteFinishedAfterDays = useStore((state) => state.setAutoDeleteFinishedAfterDays);
+    const cleanupFinishedItems = useStore((state) => state.cleanupFinishedItems);
+
     const items = useStore((state) => state.items);
     const notes = useStore((state) => state.notes);
     const tags = useStore((state) => state.tags);
@@ -22,6 +28,12 @@ export default function SettingsScreen() {
         () => items.reduce((acc, i) => acc + (i.completed ? 1 : 0), 0),
         [items]
     );
+
+    React.useEffect(() => {
+        if (autoDeleteFinishedEnabled) {
+            cleanupFinishedItems();
+        }
+    }, [autoDeleteFinishedEnabled, autoDeleteFinishedAfterDays, cleanupFinishedItems]);
 
     const handleExportCSV = async (type: 'items' | 'notes') => {
         try {
@@ -156,6 +168,78 @@ export default function SettingsScreen() {
                         >
                             <Text style={styles.smallButtonText}>{'Open'}</Text>
                         </Pressable>
+                    </View>
+                </View>
+
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>{'Finished cleanup'}</Text>
+
+                    <View style={[styles.row, { borderLeftColor: '#ff5252' }]}>
+                        <View style={styles.rowLeft}>
+                            <FileText size={20} color={'#ff5252'} />
+                            <View style={styles.rowText}>
+                                <Text style={styles.rowTitle}>{'Auto-delete finished'}</Text>
+                                <Text style={styles.rowSubtitle}>{'Remove finished tasks after a delay'}</Text>
+                            </View>
+                        </View>
+
+                        <Pressable
+                            onPress={() => {
+                                const next = !autoDeleteFinishedEnabled;
+                                setAutoDeleteFinishedEnabled(next);
+                                if (next) {
+                                    cleanupFinishedItems();
+                                    showToast('Auto-delete enabled', 'success');
+                                } else {
+                                    showToast('Auto-delete disabled', 'info');
+                                }
+                            }}
+                            style={({ pressed }) => [
+                                styles.smallButton,
+                                styles.outlineButton,
+                                { borderColor: '#ff5252' },
+                                { opacity: pressed ? 0.7 : 1 },
+                            ]}
+                        >
+                            <Text style={[styles.smallButtonText, { color: '#ff5252' }]}>
+                                {autoDeleteFinishedEnabled ? 'ON' : 'OFF'}
+                            </Text>
+                        </Pressable>
+                    </View>
+
+                    <View style={[styles.row, { borderLeftColor: '#666' }]}>
+                        <View style={styles.rowLeft}>
+                            <FileText size={20} color={'#666'} />
+                            <View style={styles.rowText}>
+                                <Text style={styles.rowTitle}>{'Delete after'}</Text>
+                                <Text style={styles.rowSubtitle}>{`${autoDeleteFinishedAfterDays} day${autoDeleteFinishedAfterDays === 1 ? '' : 's'}`}</Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.rowActions}>
+                            {[1, 7, 30, 90].map((days) => {
+                                const selected = autoDeleteFinishedAfterDays === days;
+                                return (
+                                    <Pressable
+                                        key={days}
+                                        disabled={!autoDeleteFinishedEnabled}
+                                        onPress={() => {
+                                            setAutoDeleteFinishedAfterDays(days);
+                                            showToast(`Auto-delete set to ${days} day${days === 1 ? '' : 's'}`, 'success');
+                                        }}
+                                        style={({ pressed }) => [
+                                            styles.smallButton,
+                                            selected ? undefined : styles.outlineButton,
+                                            selected ? { backgroundColor: '#ff5252' } : { borderColor: '#ff5252' },
+                                            { opacity: pressed ? 0.7 : 1 },
+                                            !autoDeleteFinishedEnabled && styles.disabled,
+                                        ]}
+                                    >
+                                        <Text style={styles.smallButtonText}>{String(days)}</Text>
+                                    </Pressable>
+                                );
+                            })}
+                        </View>
                     </View>
                 </View>
 
