@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, StyleSheet, ViewProps } from 'react-native';
 
 interface ScreenLayoutProps extends ViewProps {

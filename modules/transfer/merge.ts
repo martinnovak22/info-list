@@ -28,10 +28,11 @@ export const mergeItems = (
     existingItems: Item[],
     existingTags: Tag[],
     imported: ImportedItem[]
-): { nextItems: Item[]; nextTags: Tag[]; created: number; updated: number } => {
+): { nextItems: Item[]; nextTags: Tag[]; created: number; updated: number; affectedItems: Item[] } => {
     const itemByKey = new Map(existingItems.map((i) => [normalizeKey(i.text), i]));
     let created = 0;
     let updated = 0;
+    const affectedItems: Item[] = [];
 
     const allImportedTagNames = imported.flatMap((i) => i.tagNames);
     const { nextTags, tagNameToId } = ensureTags(existingTags, allImportedTagNames);
@@ -58,6 +59,7 @@ export const mergeItems = (
             const idx = nextItems.findIndex((x) => x.id === existing.id);
             if (idx >= 0) nextItems[idx] = merged;
             updated += 1;
+            affectedItems.push(merged);
         } else {
             const newItem: Item = {
                 id: Date.now().toString() + Math.random().toString(16).slice(2),
@@ -70,19 +72,21 @@ export const mergeItems = (
             nextItems.push(newItem);
             itemByKey.set(key, newItem);
             created += 1;
+            affectedItems.push(newItem);
         }
     });
 
-    return { nextItems, nextTags, created, updated };
+    return { nextItems, nextTags, created, updated, affectedItems };
 };
 
 export const mergeNotes = (
     existingNotes: Note[],
     imported: ImportedNote[]
-): { nextNotes: Note[]; created: number; updated: number } => {
+): { nextNotes: Note[]; created: number; updated: number; affectedNotes: Note[] } => {
     const noteByKey = new Map(existingNotes.map((n) => [normalizeKey(n.title), n]));
     let created = 0;
     let updated = 0;
+    const affectedNotes: Note[] = [];
 
     const nextNotes = [...existingNotes];
 
@@ -100,6 +104,7 @@ export const mergeNotes = (
             const idx = nextNotes.findIndex((x) => x.id === existing.id);
             if (idx >= 0) nextNotes[idx] = merged;
             updated += 1;
+            affectedNotes.push(merged);
         } else {
             const newNote: Note = {
                 id: Date.now().toString() + Math.random().toString(16).slice(2),
@@ -111,8 +116,9 @@ export const mergeNotes = (
             nextNotes.push(newNote);
             noteByKey.set(key, newNote);
             created += 1;
+            affectedNotes.push(newNote);
         }
     });
 
-    return { nextNotes, created, updated };
+    return { nextNotes, created, updated, affectedNotes };
 };

@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator, ScrollView } from 'react-native';
-import { ScreenLayout } from '../../modules/core/components/ScreenLayout';
-import { Download, Upload, FileText, Bell, Palette, Info } from 'lucide-react-native';
-import { exportItemsCsv, exportNotesCsv, importItemsCsv, importNotesCsv } from "../../modules/transfer/transferService";
-import { useToastStore } from '../../modules/core/store/toastStore';
-import { useStore } from '../../modules/core/store/store';
+import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
+import { Download, Upload, FileText, Bell, Palette, Info, RefreshCw } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
+import { exportItemsCsv, exportNotesCsv, importItemsCsv, importNotesCsv } from "../../../modules/transfer/transferService";
+import { useToastStore } from '../../../modules/core/store/toastStore';
+import { useStore } from '../../../modules/core/store/store';
 
 export default function SettingsScreen() {
+    const router = useRouter();
     const [busy, setBusy] = React.useState<{ items?: boolean; notes?: boolean }>({});
     const { showToast } = useToastStore();
 
@@ -73,8 +75,6 @@ export default function SettingsScreen() {
     return (
         <ScreenLayout>
             <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-                <Text style={styles.headerTitle}>{'Settings'}</Text>
-
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>{'Overview'}</Text>
 
@@ -244,6 +244,33 @@ export default function SettingsScreen() {
                 </View>
 
                 <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>{'Sync'}</Text>
+
+                    <View style={[styles.row, { borderLeftColor: '#2196f3' }]}>
+                        <View style={styles.rowLeft}>
+                            <RefreshCw size={20} color={'#2196f3'} />
+                            <View style={styles.rowText}>
+                                <Text style={styles.rowTitle}>{'Sync Data'}</Text>
+                                <Text style={styles.rowSubtitle}>{'Transfer data between devices'}</Text>
+                            </View>
+                        </View>
+
+                        <Pressable
+                            onPress={() => router.push('/(tabs)/settings/sync')}
+                            style={({ pressed }) => [
+                                styles.smallButton,
+                                styles.outlineButton,
+                                { borderColor: '#2196f3' },
+                                { opacity: pressed ? 0.7 : 1 },
+                            ]}
+                        >
+                            <Text style={styles.smallButtonText}>{'Open'}</Text>
+                        </Pressable>
+                    </View>
+                </View>
+
+
+                <View style={styles.section}>
                     <Text style={styles.sectionTitle}>{'Import & export'}</Text>
 
                     <View style={[styles.row, { borderLeftColor: '#4caf50' }]}>
@@ -350,12 +377,6 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
     container: {
         paddingBottom: 24,
-    },
-    headerTitle: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: '#fff',
-        marginBottom: 12,
     },
     section: {
         marginBottom: 20,

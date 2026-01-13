@@ -3,6 +3,7 @@ import { exportCsvFile, pickCsvAndRead } from './fileIO';
 import { itemsToCsv, csvToItems } from './csvItem';
 import { notesToCsv, csvToNotes } from './csvNote';
 import { mergeItems, mergeNotes } from './merge';
+import { scheduleTaskNotification } from '../core/utils/notifications';
 
 export const exportItemsCsv = async (): Promise<void> => {
     const { items, tags } = useStore.getState();
@@ -31,6 +32,13 @@ export const importItemsCsv = async (): Promise<{ created: number; updated: numb
         tags: merged.nextTags,
     }));
 
+    // Schedule notifications for affected items
+    merged.affectedItems.forEach((item) => {
+        if (item.dueDate && item.dueDate > Date.now()) {
+            scheduleTaskNotification(item.id, item.text, item.dueDate);
+        }
+    });
+
     return { created: merged.created, updated: merged.updated };
 };
 
@@ -47,6 +55,13 @@ export const importNotesCsv = async (): Promise<{ created: number; updated: numb
         ...state,
         notes: merged.nextNotes,
     }));
+
+    // Schedule notifications for affected notes
+    merged.affectedNotes.forEach((note) => {
+        if (note.dueDate && note.dueDate > Date.now()) {
+            scheduleTaskNotification(note.id, note.title, note.dueDate);
+        }
+    });
 
     return { created: merged.created, updated: merged.updated };
 };

@@ -23,6 +23,7 @@
     "expo-sharing": "~14.0.8",
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
+    "firebase": "^12.7.0",
     "lucide-react-native": "^0.562.0",
     "papaparse": "^5.5.3",
     "react": "19.1.0",
