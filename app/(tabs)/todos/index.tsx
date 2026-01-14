@@ -3,12 +3,13 @@ import { useStore } from '../../../modules/core/store/store';
 import { theme } from '../../../modules/core/constants/theme';
 import { TaskItem } from '../../../modules/core/components/TaskItem';
 import { TagSelector } from '../../../modules/core/components/TagSelector';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 import { EmptyState } from '../../../modules/core/components/EmptyState';
 import { AddTaskModal } from '../../../modules/core/components/AddTaskModal';
 import { FloatingAction } from '../../../modules/core/components/FloatingAction';
+import { useTaskFilter } from '../../../modules/core/hooks/useTaskFilter';
 
 export default function TasksScreen() {
     const {
@@ -21,9 +22,6 @@ export default function TasksScreen() {
         cleanupFinishedItems,
     } = useStore();
 
-    const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
-    const [showUntagged, setShowUntagged] = useState(false);
-    const [status, setStatus] = useState<'active' | 'finished'>('active');
     const [isModalVisible, setModalVisible] = useState(false);
 
     React.useEffect(() => {
@@ -32,36 +30,15 @@ export default function TasksScreen() {
         }
     }, [autoDeleteFinishedEnabled, autoDeleteFinishedAfterDays, cleanupFinishedItems]);
 
-    const filteredItems = useMemo(() => {
-        const base =
-            status === 'finished'
-                ? items.filter((item) => item.completed)
-                : items.filter((item) => !item.completed);
-
-        if (showUntagged) {
-            return base.filter((item) => item.tagIds.length === 0);
-        }
-
-        if (selectedTagId) {
-            return base.filter((item) => item.tagIds.includes(selectedTagId));
-        }
-
-        return base;
-    }, [items, selectedTagId, showUntagged, status]);
-
-    const selectStatus = (next: 'active' | 'finished') => {
-        setStatus(next);
-    };
-
-    const handleSelectTag = (id: string | null) => {
-        setShowUntagged(false);
-        setSelectedTagId(id);
-    };
-
-    const toggleUntagged = () => {
-        setSelectedTagId(null);
-        setShowUntagged((prev) => !prev);
-    };
+    const {
+        filteredItems,
+        selectedTagId,
+        showUntagged,
+        status,
+        selectStatus,
+        handleSelectTag,
+        toggleUntagged,
+    } = useTaskFilter(items);
 
     return (
         <ScreenLayout>
