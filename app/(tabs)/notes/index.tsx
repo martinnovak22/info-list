@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 import { EmptyState } from '../../../modules/core/components/EmptyState';
+import { FloatingAction } from '../../../modules/core/components/FloatingAction';
 
 export default function NotesListScreen() {
     const { notes } = useStore();
@@ -32,39 +33,13 @@ export default function NotesListScreen() {
                 }
             />
 
-            <Pressable
-                onPress={handleAdd}
-                style={({ pressed }) => [styles.fab, { opacity: pressed ? 0.8 : 1 }]}
-            >
-                <Plus size={32} color={"#fff"} />
-            </Pressable>
+            <FloatingAction onPress={handleAdd} Icon={Plus} />
         </ScreenLayout>
     );
 }
 
 const styles = StyleSheet.create({
     list: {
-        // padding handled by ScreenLayout, but maybe we need bottom padding for scrolling past FAB
         paddingBottom: 100,
-    },
-
-    fab: {
-        position: 'absolute',
-        bottom: 24,
-        right: 24,
-        width: 64,
-        height: 64,
-        borderRadius: 32,
-        backgroundColor: '#4caf50',
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.30,
-        shadowRadius: 4.65,
-        elevation: 8,
     },
 });

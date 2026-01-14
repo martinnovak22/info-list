@@ -7,6 +7,7 @@ import { Plus } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 import { EmptyState } from '../../../modules/core/components/EmptyState';
 import { AddTaskModal } from '../../../modules/core/components/AddTaskModal';
+import { FloatingAction } from '../../../modules/core/components/FloatingAction';
 
 export default function TasksScreen() {
     const {
@@ -103,17 +104,10 @@ export default function TasksScreen() {
                 )}
                 contentContainerStyle={styles.list}
                 ListEmptyComponent={<EmptyState text={'No tasks found'} />}
+                showsVerticalScrollIndicator={false}
             />
 
-            <Pressable
-                style={({ pressed }) => [
-                    styles.fab,
-                    { backgroundColor: '#4caf50', opacity: pressed ? 0.8 : 1 },
-                ]}
-                onPress={() => setModalVisible(true)}
-            >
-                <Plus size={32} color={'#fff'} />
-            </Pressable>
+            <FloatingAction onPress={() => setModalVisible(true)} Icon={Plus} />
 
             <AddTaskModal
                 visible={isModalVisible}
@@ -132,24 +126,6 @@ const styles = StyleSheet.create({
     clearFilter: {
         color: '#666',
         fontSize: 14,
-    },
-    fab: {
-        position: 'absolute',
-        bottom: 24,
-        right: 24,
-        width: 64,
-        height: 64,
-        borderRadius: 32,
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.30,
-        shadowRadius: 4.65,
-        elevation: 8,
     },
     segmented: {
         flexDirection: 'row',
