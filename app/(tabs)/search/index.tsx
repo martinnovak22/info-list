@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, TextInput, SectionList, Text, Pressable } from 'react-native';
 import { useStore, Item, Note } from '../../../modules/core/store/store';
+import { theme } from '../../../modules/core/constants/theme';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 import { TaskItem } from '../../../modules/core/components/TaskItem';
 import { NoteItem } from '../../../modules/notes/components/NoteItem';
@@ -50,11 +51,11 @@ export default function SearchScreen() {
     return (
         <ScreenLayout>
             <View style={styles.searchContainer}>
-                <SearchIcon size={20} color={"#666"} style={styles.searchIcon} />
+                <SearchIcon size={20} color={theme.colors.textSecondary} style={styles.searchIcon} />
                 <TextInput
                     style={styles.searchInput}
                     placeholder={"Search items and notes..."}
-                    placeholderTextColor={"#666"}
+                    placeholderTextColor={theme.colors.textSecondary}
                     value={query}
                     onChangeText={setQuery}
                     autoFocus={false}
@@ -90,7 +91,7 @@ export default function SearchScreen() {
                 ListEmptyComponent={
                     query.trim() ? <EmptyState text={"No results found"} /> :
                         <View style={styles.startSearch}>
-                            <SearchIcon size={48} color={"#333"} />
+                            <SearchIcon size={48} color={theme.colors.border} />
                             <Text style={styles.startSearchText}>Type to search...</Text>
                         </View>
                 }
@@ -104,12 +105,12 @@ const styles = StyleSheet.create({
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#1E1E1E',
+        backgroundColor: theme.colors.surface,
         borderRadius: 12,
         paddingHorizontal: 12,
         marginBottom: 16,
         borderWidth: 1,
-        borderColor: '#333',
+        borderColor: theme.colors.border,
     },
     searchIcon: {
         marginRight: 8,
@@ -117,13 +118,13 @@ const styles = StyleSheet.create({
     searchInput: {
         flex: 1,
         paddingVertical: 12,
-        color: '#fff',
+        color: theme.colors.text,
         fontSize: 16,
     },
     sectionHeader: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#4caf50',
+        color: theme.colors.primary,
         marginTop: 16,
         marginBottom: 8,
     },
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
         opacity: 0.5,
     },
     startSearchText: {
-        color: '#666',
+        color: theme.colors.textSecondary,
         marginTop: 16,
         fontSize: 16,
     },

@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { exportItemsCsv, exportNotesCsv, importItemsCsv, importNotesCsv } from "../../../modules/transfer/transferService";
 import { useToastStore } from '../../../modules/core/store/toastStore';
 import { useStore } from '../../../modules/core/store/store';
+import { theme } from '../../../modules/core/constants/theme';
 
 export default function SettingsScreen() {
     const router = useRouter();
@@ -104,9 +105,9 @@ export default function SettingsScreen() {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>{'Quick actions'}</Text>
 
-                    <View style={[styles.row, { borderLeftColor: '#2196f3' }]}>
+                    <View style={[styles.row, { borderLeftColor: theme.colors.info }]}>
                         <View style={styles.rowLeft}>
-                            <Bell size={20} color={'#2196f3'} />
+                            <Bell size={20} color={theme.colors.info} />
                             <View style={styles.rowText}>
                                 <Text style={styles.rowTitle}>{'Notifications'}</Text>
                                 <Text style={styles.rowSubtitle}>{'Coming soon'}</Text>
@@ -118,7 +119,7 @@ export default function SettingsScreen() {
                             style={({ pressed }) => [
                                 styles.smallButton,
                                 styles.outlineButton,
-                                { borderColor: '#2196f3' },
+                                { borderColor: theme.colors.info },
                                 { opacity: pressed ? 0.7 : 1 },
                             ]}
                         >
@@ -126,9 +127,9 @@ export default function SettingsScreen() {
                         </Pressable>
                     </View>
 
-                    <View style={[styles.row, { borderLeftColor: '#9c27b0' }]}>
+                    <View style={[styles.row, { borderLeftColor: theme.palette.purple }]}>
                         <View style={styles.rowLeft}>
-                            <Palette size={20} color={'#9c27b0'} />
+                            <Palette size={20} color={theme.palette.purple} />
                             <View style={styles.rowText}>
                                 <Text style={styles.rowTitle}>{'Appearance'}</Text>
                                 <Text style={styles.rowSubtitle}>{'Coming soon'}</Text>
@@ -140,7 +141,7 @@ export default function SettingsScreen() {
                             style={({ pressed }) => [
                                 styles.smallButton,
                                 styles.outlineButton,
-                                { borderColor: '#9c27b0' },
+                                { borderColor: theme.palette.purple },
                                 { opacity: pressed ? 0.7 : 1 },
                             ]}
                         >
@@ -148,9 +149,9 @@ export default function SettingsScreen() {
                         </Pressable>
                     </View>
 
-                    <View style={[styles.row, { borderLeftColor: '#888' }]}>
+                    <View style={[styles.row, { borderLeftColor: theme.colors.iconSecondary }]}>
                         <View style={styles.rowLeft}>
-                            <Info size={20} color={'#888'} />
+                            <Info size={20} color={theme.colors.iconSecondary} />
                             <View style={styles.rowText}>
                                 <Text style={styles.rowTitle}>{'About'}</Text>
                                 <Text style={styles.rowSubtitle}>{'Coming soon'}</Text>
@@ -162,7 +163,7 @@ export default function SettingsScreen() {
                             style={({ pressed }) => [
                                 styles.smallButton,
                                 styles.outlineButton,
-                                { borderColor: '#888' },
+                                { borderColor: theme.colors.iconSecondary },
                                 { opacity: pressed ? 0.7 : 1 },
                             ]}
                         >
@@ -174,9 +175,9 @@ export default function SettingsScreen() {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>{'Finished cleanup'}</Text>
 
-                    <View style={[styles.row, { borderLeftColor: '#ff5252' }]}>
+                    <View style={[styles.row, { borderLeftColor: theme.colors.error }]}>
                         <View style={styles.rowLeft}>
-                            <FileText size={20} color={'#ff5252'} />
+                            <FileText size={20} color={theme.colors.error} />
                             <View style={styles.rowText}>
                                 <Text style={styles.rowTitle}>{'Auto-delete finished'}</Text>
                                 <Text style={styles.rowSubtitle}>{'Remove finished tasks after a delay'}</Text>
@@ -197,19 +198,19 @@ export default function SettingsScreen() {
                             style={({ pressed }) => [
                                 styles.smallButton,
                                 styles.outlineButton,
-                                { borderColor: '#ff5252' },
+                                { borderColor: theme.colors.error },
                                 { opacity: pressed ? 0.7 : 1 },
                             ]}
                         >
-                            <Text style={[styles.smallButtonText, { color: '#ff5252' }]}>
+                            <Text style={[styles.smallButtonText, { color: theme.colors.error }]}>
                                 {autoDeleteFinishedEnabled ? 'ON' : 'OFF'}
                             </Text>
                         </Pressable>
                     </View>
 
-                    <View style={[styles.row, { borderLeftColor: '#666' }]}>
+                    <View style={[styles.row, { borderLeftColor: theme.colors.iconSecondary }]}>
                         <View style={styles.rowLeft}>
-                            <FileText size={20} color={'#666'} />
+                            <FileText size={20} color={theme.colors.textSecondary} />
                             <View style={styles.rowText}>
                                 <Text style={styles.rowTitle}>{'Delete after'}</Text>
                                 <Text style={styles.rowSubtitle}>{`${autoDeleteFinishedAfterDays} day${autoDeleteFinishedAfterDays === 1 ? '' : 's'}`}</Text>
@@ -230,7 +231,7 @@ export default function SettingsScreen() {
                                         style={({ pressed }) => [
                                             styles.smallButton,
                                             selected ? undefined : styles.outlineButton,
-                                            selected ? { backgroundColor: '#ff5252' } : { borderColor: '#ff5252' },
+                                            selected ? { backgroundColor: theme.colors.error } : { borderColor: theme.colors.error },
                                             { opacity: pressed ? 0.7 : 1 },
                                             !autoDeleteFinishedEnabled && styles.disabled,
                                         ]}
@@ -246,9 +247,9 @@ export default function SettingsScreen() {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>{'Sync'}</Text>
 
-                    <View style={[styles.row, { borderLeftColor: '#2196f3' }]}>
+                    <View style={[styles.row, { borderLeftColor: theme.colors.info }]}>
                         <View style={styles.rowLeft}>
-                            <RefreshCw size={20} color={'#2196f3'} />
+                            <RefreshCw size={20} color={theme.colors.info} />
                             <View style={styles.rowText}>
                                 <Text style={styles.rowTitle}>{'Sync Data'}</Text>
                                 <Text style={styles.rowSubtitle}>{'Transfer data between devices'}</Text>
@@ -260,7 +261,7 @@ export default function SettingsScreen() {
                             style={({ pressed }) => [
                                 styles.smallButton,
                                 styles.outlineButton,
-                                { borderColor: '#2196f3' },
+                                { borderColor: theme.colors.info },
                                 { opacity: pressed ? 0.7 : 1 },
                             ]}
                         >
@@ -269,13 +270,12 @@ export default function SettingsScreen() {
                     </View>
                 </View>
 
-
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>{'Import & export'}</Text>
 
-                    <View style={[styles.row, { borderLeftColor: '#4caf50' }]}>
+                    <View style={[styles.row, { borderLeftColor: theme.palette.green }]}>
                         <View style={styles.rowLeft}>
-                            <FileText size={20} color={'#4caf50'} />
+                            <FileText size={20} color={theme.palette.green} />
                             <View style={styles.rowText}>
                                 <Text style={styles.rowTitle}>{'Tasks'}</Text>
                                 <Text style={styles.rowSubtitle}>{'Tasks as CSV'}</Text>
@@ -320,9 +320,9 @@ export default function SettingsScreen() {
                         </View>
                     </View>
 
-                    <View style={[styles.row, { borderLeftColor: '#ff9800' }]}>
+                    <View style={[styles.row, { borderLeftColor: theme.palette.orange }]}>
                         <View style={styles.rowLeft}>
-                            <FileText size={20} color={'#ff9800'} />
+                            <FileText size={20} color={theme.palette.orange} />
                             <View style={styles.rowText}>
                                 <Text style={styles.rowTitle}>{'Notes'}</Text>
                                 <Text style={styles.rowSubtitle}>{'Notes as CSV'}</Text>
@@ -336,7 +336,7 @@ export default function SettingsScreen() {
                                 style={({ pressed }) => [
                                     styles.smallButton,
                                     styles.outlineButton,
-                                    { borderColor: '#ff9800' },
+                                    { borderColor: theme.palette.orange },
                                     { opacity: pressed ? 0.7 : 1 },
                                     busy.notes && styles.disabled,
                                 ]}
@@ -354,7 +354,7 @@ export default function SettingsScreen() {
                                 onPress={() => handleImportCSV('notes')}
                                 style={({ pressed }) => [
                                     styles.smallButton,
-                                    { backgroundColor: '#ff9800' },
+                                    { backgroundColor: theme.palette.orange },
                                     { opacity: pressed ? 0.7 : 1 },
                                     busy.notes && styles.disabled,
                                 ]}
@@ -394,20 +394,20 @@ const styles = StyleSheet.create({
     },
     tile: {
         width: '48%',
-        backgroundColor: '#1E1E1E',
+        backgroundColor: theme.colors.surface,
         borderRadius: 8,
         padding: 14,
         borderWidth: 1,
-        borderColor: '#2a2a2a',
+        borderColor: theme.colors.surfaceHighlight,
     },
     tileValue: {
-        color: '#fff',
+        color: theme.colors.white,
         fontSize: 20,
         fontWeight: '800',
         marginBottom: 4,
     },
     tileLabel: {
-        color: '#888',
+        color: theme.colors.textSecondary,
         fontSize: 12,
         fontWeight: '600',
     },
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: 14,
-        backgroundColor: '#1E1E1E',
+        backgroundColor: theme.colors.surface,
         borderRadius: 8,
         marginBottom: 8,
         borderLeftWidth: 4,
@@ -432,12 +432,12 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     rowTitle: {
-        color: '#fff',
+        color: theme.colors.white,
         fontSize: 16,
         marginBottom: 2,
     },
     rowSubtitle: {
-        color: '#888',
+        color: theme.colors.iconSecondary,
         fontSize: 12,
     },
     rowActions: {
@@ -453,15 +453,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap: 6,
-        backgroundColor: '#4caf50',
+        backgroundColor: theme.colors.primary,
     },
     outlineButton: {
         backgroundColor: 'transparent',
         borderWidth: 1,
-        borderColor: '#4caf50',
+        borderColor: theme.colors.primary,
     },
     smallButtonText: {
-        color: '#fff',
+        color: theme.colors.white,
         fontWeight: '600',
         fontSize: 13,
     },

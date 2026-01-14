@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, GestureResponderEvent } from 'react-native';
 import { LucideIcon } from 'lucide-react-native';
+import { theme } from '../../../modules/core/constants/theme';
 
 interface FloatingActionProps {
     onPress: (event: GestureResponderEvent) => void;
@@ -16,7 +17,7 @@ export const FloatingAction: React.FC<FloatingActionProps> = ({ onPress, Icon })
                 { opacity: pressed ? 0.8 : 1 },
             ]}
         >
-            <Icon size={32} color={'#fff'} />
+            <Icon size={32} color={theme.colors.white} />
         </Pressable>
     );
 };
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
         width: 64,
         height: 64,
         borderRadius: 32,
-        backgroundColor: '#4caf50',
+        backgroundColor: theme.colors.primary,
         alignItems: 'center',
         justifyContent: 'center',
         shadowColor: "#000",

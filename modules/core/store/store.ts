@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { theme } from '../constants/theme';
 
 export type Tag = {
     id: string;
@@ -55,8 +56,8 @@ export const useStore = create<StoreState>()(
     persist(
         (set) => ({
             tags: [
-                { id: '1', name: 'Tasks', color: '#4caf50' },
-                { id: '2', name: 'Shopping', color: '#ff9800' },
+                { id: '1', name: 'Tasks', color: theme.palette.green },
+                { id: '2', name: 'Shopping', color: theme.palette.orange },
             ],
             items: [],
             notes: [],

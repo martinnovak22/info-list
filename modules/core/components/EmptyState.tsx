@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { theme } from '../constants/theme';
 
 type Props = {
     text: string;
@@ -19,7 +20,8 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     emptyText: {
-        color: '#666',
+        color: theme.colors.textSecondary,
         fontSize: 16,
+        marginTop: 8,
     },
 });

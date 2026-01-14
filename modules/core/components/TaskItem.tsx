@@ -1,7 +1,9 @@
+
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Item, Tag } from '../store/store';
 import { Trash2, CheckCircle, Circle } from 'lucide-react-native';
+import { theme } from '../constants/theme';
 import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { useToastStore } from '../store/toastStore';
 import { cancelTaskNotification, scheduleTaskNotification } from '../utils/notifications';
@@ -34,8 +36,8 @@ export const TaskItem = ({ item, tags, onToggle, onDelete }: Props) => {
         showToast('Task deleted', 'info');
     };
     const primaryTagId = item.tagIds[0];
-    const primaryTag = tags.find(t => t.id === primaryTagId);
-    const color = primaryTag?.color || '#666';
+    const primaryTag = tags.find(t => t.id === item.tagIds[0]);
+    const color = primaryTag?.color || theme.colors.textSecondary;
 
     const formattedDate = item.dueDate ? new Date(item.dueDate).toLocaleDateString() : null;
 
@@ -57,7 +59,7 @@ export const TaskItem = ({ item, tags, onToggle, onDelete }: Props) => {
                 )}
 
                 <View style={styles.textContainer}>
-                    <Text style={[styles.text, item.completed && styles.completedText]}>
+                    <Text style={[styles.text, item.completed && styles.textCompleted]}>
                         {item.text}
                     </Text>
                     <View style={styles.metaRow}>
@@ -76,9 +78,9 @@ export const TaskItem = ({ item, tags, onToggle, onDelete }: Props) => {
             <Pressable
                 onPress={handleDelete}
                 hitSlop={10}
-                style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+                style={styles.deleteButton}
             >
-                <Trash2 size={20} color={"#ff5252"} />
+                <Trash2 size={20} color={theme.colors.error} />
             </Pressable>
         </Animated.View>
     );
@@ -88,12 +90,12 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 16,
-        backgroundColor: '#1E1E1E',
-        borderRadius: 8,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        backgroundColor: theme.colors.surface,
+        borderRadius: 12,
         marginBottom: 8,
-        borderLeftWidth: 4,
+        minHeight: 56,
     },
     content: {
         flexDirection: 'row',
@@ -103,15 +105,15 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         flex: 1,
+        justifyContent: 'center',
     },
     text: {
-        color: '#fff',
         fontSize: 16,
-        marginBottom: 4,
+        color: theme.colors.white,
     },
-    completedText: {
+    textCompleted: {
         textDecorationLine: 'line-through',
-        color: '#666',
+        color: theme.colors.textSecondary,
     },
     metaRow: {
         flexDirection: 'row',
@@ -130,5 +132,31 @@ const styles = StyleSheet.create({
     dateText: {
         color: '#888',
         fontSize: 12,
+    },
+    checkbox: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        borderWidth: 2,
+        marginRight: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    deleteButton: {
+        padding: 8,
+        marginLeft: 8,
+    },
+    tagDot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        position: 'absolute',
+        top: 12,
+        right: 12,
+    },
+    time: {
+        fontSize: 11,
+        color: theme.colors.iconSecondary,
+        marginTop: 4,
     },
 });

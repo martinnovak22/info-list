@@ -1,5 +1,6 @@
 import { View, StyleSheet, FlatList, Pressable, Text } from 'react-native';
 import { useStore } from '../../../modules/core/store/store';
+import { theme } from '../../../modules/core/constants/theme';
 import { TaskItem } from '../../../modules/core/components/TaskItem';
 import { TagSelector } from '../../../modules/core/components/TagSelector';
 import React, { useMemo, useState } from 'react';
@@ -124,16 +125,16 @@ const styles = StyleSheet.create({
         paddingBottom: 100,
     },
     clearFilter: {
-        color: '#666',
+        color: theme.colors.textSecondary,
         fontSize: 14,
     },
     segmented: {
         flexDirection: 'row',
-        backgroundColor: '#1E1E1E',
+        backgroundColor: theme.colors.surface,
         borderRadius: 14,
         padding: 4,
         borderWidth: 1,
-        borderColor: '#2a2a2a',
+        borderColor: theme.colors.surfaceHighlight,
         marginBottom: 12,
     },
     segment: {
@@ -144,15 +145,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     segmentSelected: {
-        backgroundColor: '#2C2C2E',
+        backgroundColor: theme.colors.surfaceHighlight,
     },
     segmentText: {
-        color: '#9a9a9a',
+        color: theme.colors.textTertiary,
         fontWeight: '800',
         fontSize: 13,
         letterSpacing: 0.2,
     },
     segmentTextSelected: {
-        color: '#fff',
+        color: theme.colors.white,
     },
 });
