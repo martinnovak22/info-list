@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, Platform, Pressable } from 'react-native';
 import Animated, { FadeInUp, FadeOutUp, SlideInUp, SlideOutUp, LinearTransition } from 'react-native-reanimated';
 import { useToastStore } from '../store/toastStore';
+import { theme } from '../constants/theme';
 import { CheckCircle, AlertCircle, Info } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -18,6 +19,27 @@ export const Toast = () => {
         }
     }, [visible, hideToast, duration]);
 
+    const getIcon = React.useCallback(() => {
+        switch (type) {
+            case 'success': return <CheckCircle size={24} color={theme.colors.primary} />;
+            case 'error': return <AlertCircle size={24} color={theme.colors.error} />;
+            default: return <Info size={24} color={theme.colors.info} />;
+        }
+    }, [type]);
+
+    const getBorderColor = React.useCallback(() => {
+        switch (type) {
+            case 'success': return theme.colors.primary;
+            case 'error': return theme.colors.error;
+            case 'info': return theme.colors.info;
+            default: return theme.colors.info;
+        }
+    }, [type]);
+
+    const getBackgroundColor = React.useCallback(() => {
+        return theme.colors.surfaceHighlight;
+    }, []);
+
     if (!visible) return null;
 
     const handleAction = () => {
@@ -27,18 +49,6 @@ export const Toast = () => {
         }
     };
 
-    const getIcon = () => {
-        switch (type) {
-            case 'success': return <CheckCircle size={24} color="#4caf50" />;
-            case 'error': return <AlertCircle size={24} color="#ff5252" />;
-            default: return <Info size={24} color="#2196f3" />;
-        }
-    };
-
-    const getBgColor = () => {
-        return '#2C2C2E';
-    };
-
     return (
         <Animated.View
             entering={FadeInUp.duration(300)}
@@ -46,13 +56,13 @@ export const Toast = () => {
             layout={LinearTransition.duration(300)}
             style={[
                 styles.container,
-                { top: insets.top + 12, backgroundColor: getBgColor() }
+                { top: insets.top + 12, backgroundColor: getBackgroundColor(), borderColor: getBorderColor() }
             ]}
         >
             <View style={styles.content}>
                 <View style={styles.messageRow}>
                     <View style={styles.iconContainer}>{getIcon()}</View>
-                    <Text style={styles.text} numberOfLines={2}>{message}</Text>
+                    <Text style={styles.toastText} numberOfLines={2}>{message}</Text>
                 </View>
                 {action && (
                     <Pressable
@@ -89,6 +99,7 @@ const styles = StyleSheet.create({
         elevation: 15,
         minHeight: 64,
         justifyContent: 'center',
+        borderWidth: 1,
     },
     content: {
         flexDirection: 'row',
@@ -106,10 +117,10 @@ const styles = StyleSheet.create({
         width: 32,
         alignItems: 'center',
     },
-    text: {
-        color: '#fff',
-        fontSize: 15,
-        fontWeight: '600',
+    toastText: {
+        color: theme.colors.white,
+        fontSize: 16,
+        fontWeight: '500',
         flex: 1,
     },
     actionButton: {
@@ -120,9 +131,13 @@ const styles = StyleSheet.create({
         marginLeft: 4,
     },
     actionText: {
-        color: '#2196f3',
+        color: theme.colors.info,
         fontSize: 13,
         fontWeight: '800',
         letterSpacing: 0.5,
-    }
+    },
+    closeButton: {
+        marginLeft: 12,
+        padding: 4,
+    },
 });

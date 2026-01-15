@@ -1,12 +1,16 @@
 import { View, StyleSheet, FlatList, Pressable, Text } from 'react-native';
 import { useStore } from '../../../modules/core/store/store';
+import { theme } from '../../../modules/core/constants/theme';
 import { TaskItem } from '../../../modules/core/components/TaskItem';
 import { TagSelector } from '../../../modules/core/components/TagSelector';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react-native';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 import { EmptyState } from '../../../modules/core/components/EmptyState';
 import { AddTaskModal } from '../../../modules/core/components/AddTaskModal';
+import { FloatingAction } from '../../../modules/core/components/FloatingAction';
+import { useTaskFilter } from '../../../modules/core/hooks/useTaskFilter';
 
 export default function TasksScreen() {
     const {
@@ -19,9 +23,6 @@ export default function TasksScreen() {
         cleanupFinishedItems,
     } = useStore();
 
-    const [selectedTagId, setSelectedTagId] = useState<string | null>(null);
-    const [showUntagged, setShowUntagged] = useState(false);
-    const [status, setStatus] = useState<'active' | 'finished'>('active');
     const [isModalVisible, setModalVisible] = useState(false);
 
     React.useEffect(() => {
@@ -30,36 +31,15 @@ export default function TasksScreen() {
         }
     }, [autoDeleteFinishedEnabled, autoDeleteFinishedAfterDays, cleanupFinishedItems]);
 
-    const filteredItems = useMemo(() => {
-        const base =
-            status === 'finished'
-                ? items.filter((item) => item.completed)
-                : items.filter((item) => !item.completed);
-
-        if (showUntagged) {
-            return base.filter((item) => item.tagIds.length === 0);
-        }
-
-        if (selectedTagId) {
-            return base.filter((item) => item.tagIds.includes(selectedTagId));
-        }
-
-        return base;
-    }, [items, selectedTagId, showUntagged, status]);
-
-    const selectStatus = (next: 'active' | 'finished') => {
-        setStatus(next);
-    };
-
-    const handleSelectTag = (id: string | null) => {
-        setShowUntagged(false);
-        setSelectedTagId(id);
-    };
-
-    const toggleUntagged = () => {
-        setSelectedTagId(null);
-        setShowUntagged((prev) => !prev);
-    };
+    const {
+        filteredItems,
+        selectedTagId,
+        showUntagged,
+        status,
+        selectStatus,
+        handleSelectTag,
+        toggleUntagged,
+    } = useTaskFilter(items);
 
     return (
         <ScreenLayout>
@@ -95,25 +75,19 @@ export default function TasksScreen() {
                 </Pressable>
             </View>
 
-            <FlatList
+            <Animated.FlatList
                 data={filteredItems}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
+                keyExtractor={(item: { id: string }) => item.id}
+                itemLayoutAnimation={LinearTransition.springify()}
+                renderItem={({ item }: { item: any }) => (
                     <TaskItem item={item} tags={tags} onToggle={toggleItem} onDelete={deleteItem} />
                 )}
                 contentContainerStyle={styles.list}
                 ListEmptyComponent={<EmptyState text={'No tasks found'} />}
+                showsVerticalScrollIndicator={false}
             />
 
-            <Pressable
-                style={({ pressed }) => [
-                    styles.fab,
-                    { backgroundColor: '#4caf50', opacity: pressed ? 0.8 : 1 },
-                ]}
-                onPress={() => setModalVisible(true)}
-            >
-                <Plus size={32} color={'#fff'} />
-            </Pressable>
+            <FloatingAction onPress={() => setModalVisible(true)} Icon={Plus} />
 
             <AddTaskModal
                 visible={isModalVisible}
@@ -130,34 +104,16 @@ const styles = StyleSheet.create({
         paddingBottom: 100,
     },
     clearFilter: {
-        color: '#666',
+        color: theme.colors.textSecondary,
         fontSize: 14,
-    },
-    fab: {
-        position: 'absolute',
-        bottom: 24,
-        right: 24,
-        width: 64,
-        height: 64,
-        borderRadius: 32,
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.30,
-        shadowRadius: 4.65,
-        elevation: 8,
     },
     segmented: {
         flexDirection: 'row',
-        backgroundColor: '#1E1E1E',
+        backgroundColor: theme.colors.surface,
         borderRadius: 14,
         padding: 4,
         borderWidth: 1,
-        borderColor: '#2a2a2a',
+        borderColor: theme.colors.surfaceHighlight,
         marginBottom: 12,
     },
     segment: {
@@ -168,15 +124,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     segmentSelected: {
-        backgroundColor: '#2C2C2E',
+        backgroundColor: theme.colors.surfaceHighlight,
     },
     segmentText: {
-        color: '#9a9a9a',
+        color: theme.colors.textTertiary,
         fontWeight: '800',
         fontSize: 13,
         letterSpacing: 0.2,
     },
     segmentTextSelected: {
-        color: '#fff',
+        color: theme.colors.white,
     },
 });

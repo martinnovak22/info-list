@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Modal, TextInput, Pressable, ScrollView, Platfo
 import { useStore } from '../store/store';
 import { DatePickerInput } from './DatePickerInput';
 import { X } from 'lucide-react-native';
+import { theme } from '../constants/theme';
 import { scheduleTaskNotification } from '../utils/notifications';
 import { useToastStore } from '../store/toastStore';
 
@@ -56,7 +57,7 @@ export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
                     <View style={styles.header}>
                         <Text style={styles.title}>{'New Item'}</Text>
                         <Pressable onPress={handleClose}>
-                            <X size={24} color={"#fff"} />
+                            <X size={24} color={theme.colors.white} />
                         </Pressable>
                     </View>
 
@@ -64,7 +65,7 @@ export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
                     <TextInput
                         style={styles.input}
                         placeholder={"What needs to be done?"}
-                        placeholderTextColor={"#666"}
+                        placeholderTextColor={theme.colors.textSecondary}
                         value={text}
                         onChangeText={setText}
                         autoFocus={true}
@@ -92,13 +93,15 @@ export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
                                 key={tag.id}
                                 style={[
                                     styles.tag,
-                                    selectedTagId === tag.id && { backgroundColor: tag.color, borderColor: tag.color }
+                                    { borderColor: tag.color },
+                                    selectedTagId === tag.id && { backgroundColor: tag.color }
                                 ]}
                                 onPress={() => setSelectedTagId(tag.id)}
                             >
                                 <Text style={[
                                     styles.tagText,
-                                    selectedTagId === tag.id && { color: '#000' }
+                                    { color: tag.color },
+                                    selectedTagId === tag.id && { color: theme.colors.surface }
                                 ]}>
                                     {tag.name}
                                 </Text>
@@ -111,8 +114,8 @@ export const AddTaskModal = ({ visible, onClose, defaultTagId }: Props) => {
                         <DatePickerInput
                             date={dueDate}
                             onDateChange={setDueDate}
-                            backgroundColor={"#333"}
-                            iconColor={"#fff"}
+                            backgroundColor={theme.colors.surfaceHighlight}
+                            iconColor={theme.colors.white}
                         />
                     </View>
 
@@ -136,7 +139,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     content: {
-        backgroundColor: '#1E1E1E',
+        backgroundColor: theme.colors.surface,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         padding: 24,
@@ -150,19 +153,19 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
     title: {
-        color: '#fff',
+        color: theme.colors.white,
         fontSize: 24,
         fontWeight: 'bold',
     },
     label: {
-        color: '#888',
+        color: theme.colors.textSecondary,
         fontSize: 14,
         fontWeight: '600',
         marginTop: 8,
     },
     input: {
-        backgroundColor: '#333',
-        color: '#fff',
+        backgroundColor: theme.colors.surfaceHighlight,
+        color: theme.colors.text,
         padding: 16,
         borderRadius: 12,
         fontSize: 16,
@@ -175,33 +178,33 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         borderRadius: 20,
         borderWidth: 1,
-        borderColor: '#666',
+        borderColor: theme.colors.border,
         backgroundColor: 'transparent',
     },
     tagText: {
-        color: '#fff',
+        color: theme.colors.white,
         fontSize: 14,
         fontWeight: '600',
     },
     noneTagSelected: {
-        backgroundColor: '#333',
-        borderColor: '#333',
+        backgroundColor: theme.colors.surfaceHighlight,
+        borderColor: theme.colors.surfaceHighlight,
     },
     noneTagTextSelected: {
-        color: '#fff',
+        color: theme.colors.white,
     },
     dateContainer: {
         alignItems: 'flex-start',
     },
     addButton: {
-        backgroundColor: '#4caf50',
+        backgroundColor: theme.colors.primary,
         padding: 16,
         borderRadius: 12,
         alignItems: 'center',
         marginTop: 16,
     },
     addButtonText: {
-        color: '#fff',
+        color: theme.colors.white,
         fontSize: 16,
         fontWeight: 'bold',
     },

@@ -1,6 +1,7 @@
 import { TextInput, StyleSheet, Alert, View, Pressable, Text } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack, useNavigation } from 'expo-router';
 import { useStore } from '../../../modules/core/store/store';
+import { theme } from '../../../modules/core/constants/theme';
 import { useState, useLayoutEffect } from 'react';
 import { Trash2, Save, ArrowLeft } from 'lucide-react-native';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
@@ -29,7 +30,7 @@ export default function NoteDetailScreen() {
             title: isNew ? 'New Note' : 'Edit Note',
             headerLeft: () => (
                 <Pressable onPress={() => router.back()} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1, marginRight: 16 })}>
-                    <ArrowLeft size={24} color="#fff" />
+                    <ArrowLeft size={24} color={theme.colors.white} />
                 </Pressable>
             ),
             headerRight: () => (
@@ -39,14 +40,14 @@ export default function NoteDetailScreen() {
                             onPress={handleDelete}
                             style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
                         >
-                            <Trash2 size={24} color="#ff5252" />
+                            <Trash2 size={24} color={theme.colors.error} />
                         </Pressable>
                     )}
                     <Pressable
                         onPress={handleSave}
                         style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
                     >
-                        <Save size={24} color="#4caf50" />
+                        <Save size={24} color={theme.colors.primary} />
                     </Pressable>
                 </View>
             ),
@@ -95,14 +96,14 @@ export default function NoteDetailScreen() {
             <TextInput
                 style={styles.titleInput}
                 placeholder="Title"
-                placeholderTextColor="#666"
+                placeholderTextColor={theme.colors.textSecondary}
                 value={title}
                 onChangeText={setTitle}
             />
             <TextInput
                 style={styles.contentInput}
                 placeholder="Start typing..."
-                placeholderTextColor="#666"
+                placeholderTextColor={theme.colors.textSecondary}
                 value={content}
                 onChangeText={setContent}
                 multiline
@@ -122,12 +123,12 @@ const styles = StyleSheet.create({
     titleInput: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#fff',
+        color: theme.colors.text,
         marginBottom: 16,
     },
     contentInput: {
         fontSize: 16,
-        color: '#ddd',
+        color: theme.colors.textDim,
         flex: 1,
     },
 });

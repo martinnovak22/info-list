@@ -2,8 +2,9 @@ import type { Item, Note, Tag } from '../core/store/store';
 import { normalizeKey } from './normalize';
 import type { ImportedItem } from './csvItem';
 import type { ImportedNote } from './csvNote';
+import { theme } from '../core/constants/theme';
 
-const defaultTagColor = '#4caf50';
+const defaultTagColor = theme.palette.green;
 
 const ensureTags = (existingTags: Tag[], tagNames: string[]): { nextTags: Tag[]; tagNameToId: Map<string, string> } => {
     const byNormName = new Map(existingTags.map((t) => [normalizeKey(t.name), t]));

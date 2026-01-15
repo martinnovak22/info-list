@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import { theme } from '../../modules/core/constants/theme';
 import { CheckSquare, StickyNote, Calendar, Search as SearchIcon, Settings as SettingsIcon } from 'lucide-react-native';
 
 export default function TabLayout() {
@@ -10,18 +11,18 @@ export default function TabLayout() {
                 tabBarStyle: {
                     height: 80,
                     paddingTop: 8,
-                    backgroundColor: '#121212',
-                    borderTopColor: '#333',
+                    backgroundColor: theme.colors.background,
+                    borderTopColor: theme.colors.border,
                 },
-                tabBarActiveTintColor: '#fff',
-                tabBarInactiveTintColor: '#666',
+                tabBarActiveTintColor: theme.colors.white,
+                tabBarInactiveTintColor: theme.colors.textSecondary,
                 headerStyle: {
-                    backgroundColor: '#121212',
-                    borderBottomColor: '#333',
+                    backgroundColor: theme.colors.background,
+                    borderBottomColor: theme.colors.border,
                     borderBottomWidth: 1,
                 },
                 headerTitleAlign: "center",
-                headerTintColor: '#fff',
+                headerTintColor: theme.colors.white,
                 headerRightContainerStyle: {
                     paddingRight: 8,
                 },

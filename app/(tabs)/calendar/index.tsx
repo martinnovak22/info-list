@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, FlatList } from 'react-native';
 import { Calendar, DateData } from 'react-native-calendars';
 import { useStore } from '../../../modules/core/store/store';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
+import { theme } from '../../../modules/core/constants/theme';
 import { useRouter } from 'expo-router';
 import { Pressable } from 'react-native';
 import { ShoppingBag, CheckSquare, StickyNote } from 'lucide-react-native';
@@ -28,17 +29,17 @@ export default function CalendarScreen() {
 
         items.forEach(item => {
             const tag = tags.find(t => t.id === item.tagIds[0]);
-            const color = tag?.color || '#fff';
+            const color = tag?.color || theme.colors.white;
             addMark(item.dueDate, color);
         });
 
-        notes.forEach(n => addMark(n.dueDate, '#ffeb3b'));
+        notes.forEach(n => addMark(n.dueDate, theme.palette.orange));
 
         if (marks[selectedDate]) {
             marks[selectedDate].selected = true;
-            marks[selectedDate].selectedColor = '#333';
+            marks[selectedDate].selectedColor = theme.colors.border;
         } else {
-            marks[selectedDate] = { selected: true, selectedColor: '#333', dots: [] };
+            marks[selectedDate] = { selected: true, selectedColor: theme.colors.border, dots: [] };
         }
 
         return marks;
@@ -65,11 +66,11 @@ export default function CalendarScreen() {
 
         if (item.type === 'task') {
             const tag = tags.find((t: any) => t.id === item.tagIds?.[0]);
-            color = tag?.color || '#fff';
+            color = tag?.color || theme.colors.white;
             icon = <CheckSquare size={20} color={color} />;
         } else {
-            icon = <StickyNote size={20} color={"#ffeb3b"} />;
-            color = "#ffeb3b";
+            icon = <StickyNote size={20} color={theme.palette.orange} />;
+            color = theme.palette.orange;
         }
 
         return (
@@ -88,14 +89,14 @@ export default function CalendarScreen() {
                 markingType={'multi-dot'}
                 theme={{
                     calendarBackground: 'transparent',
-                    textSectionTitleColor: '#b6c1cd',
-                    selectedDayBackgroundColor: '#00adf5',
-                    selectedDayTextColor: '#ffffff',
-                    todayTextColor: '#00adf5',
-                    dayTextColor: '#d9e1e8',
-                    textDisabledColor: '#2d4150',
-                    dotColor: '#00adf5',
-                    selectedDotColor: '#ffffff',
+                    textSectionTitleColor: theme.colors.textSecondary,
+                    selectedDayBackgroundColor: theme.colors.info,
+                    selectedDayTextColor: theme.colors.white,
+                    todayTextColor: theme.colors.info,
+                    dayTextColor: theme.colors.textDim,
+                    textDisabledColor: theme.colors.surfaceHighlight,
+                    dotColor: theme.colors.info,
+                    selectedDotColor: theme.colors.white,
                     arrowColor: 'white',
                     monthTextColor: 'white',
                     indicatorColor: 'white',
@@ -122,25 +123,25 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#fff',
+        color: theme.colors.white,
         marginBottom: 12,
     },
     item: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 12,
-        backgroundColor: '#1E1E1E',
+        backgroundColor: theme.colors.surface,
         marginBottom: 8,
         borderRadius: 8,
         gap: 12,
         borderLeftWidth: 4,
     },
     itemText: {
-        color: '#fff',
+        color: theme.colors.white,
         fontSize: 16,
     },
     emptyText: {
-        color: '#666',
+        color: theme.colors.textSecondary,
         textAlign: 'center',
         marginTop: 20,
     },

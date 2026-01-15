@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { Note } from '../../core/store/store';
+import { Note } from '../../../modules/core/store/store';
 import { ChevronRight } from 'lucide-react-native';
+import { theme } from '../../../modules/core/constants/theme';
 import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
 
 type Props = {
@@ -20,11 +21,13 @@ export const NoteItem = ({ note, onPress }: Props) => {
                 style={({ pressed }) => [styles.container, { opacity: pressed ? 0.7 : 1 }]}
                 onPress={() => onPress(note.id)}
             >
-                <View style={styles.content}>
-                    <Text style={styles.title} numberOfLines={1}>{note.title || 'Untitled'}</Text>
-                    <Text style={styles.preview} numberOfLines={2}>{note.content}</Text>
+                <View style={styles.textContainer}>
+                    <Text style={styles.title} numberOfLines={1}>{note.title || 'Untitled Note'}</Text>
+                    <Text style={styles.content} numberOfLines={2}>
+                        {note.content || 'No additional text'}
+                    </Text>
                 </View>
-                <ChevronRight size={20} color={"#666"} />
+                <ChevronRight size={20} color={theme.colors.textSecondary} />
             </Pressable>
         </Animated.View>
     );
@@ -32,26 +35,25 @@ export const NoteItem = ({ note, onPress }: Props) => {
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: theme.colors.surface,
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 12,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 16,
-        backgroundColor: '#1E1E1E',
-        borderRadius: 8,
-        marginBottom: 8,
     },
-    content: {
+    textContainer: {
         flex: 1,
-        marginRight: 10,
+        marginRight: 12,
     },
     title: {
-        color: '#fff',
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '600',
+        color: theme.colors.white,
         marginBottom: 4,
     },
-    preview: {
-        color: '#aaa',
+    content: {
         fontSize: 14,
+        color: theme.colors.iconSecondary,
     },
 });

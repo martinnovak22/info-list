@@ -1,4 +1,5 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -37,15 +38,17 @@ export default function RootLayout() {
     const isDark = true; // Forcing dark for now as requested
 
     return (
-        <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
-            <AuthOverlay>
-                <Stack>
-                    <Stack.Screen name={"(tabs)"} options={{ headerShown: false }} />
-                    <Stack.Screen name={"+not-found"} />
-                </Stack>
-                <StatusBar style={isDark ? 'light' : 'dark'} />
-                <Toast />
-            </AuthOverlay>
-        </ThemeProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <ThemeProvider value={isDark ? DarkTheme : DefaultTheme}>
+                <AuthOverlay>
+                    <Stack>
+                        <Stack.Screen name={"(tabs)"} options={{ headerShown: false }} />
+                        <Stack.Screen name={"+not-found"} />
+                    </Stack>
+                    <StatusBar style={isDark ? 'light' : 'dark'} />
+                    <Toast />
+                </AuthOverlay>
+            </ThemeProvider>
+        </GestureHandlerRootView>
     );
 }

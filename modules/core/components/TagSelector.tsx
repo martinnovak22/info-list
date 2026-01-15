@@ -11,7 +11,18 @@ type Props = {
     onToggleUntagged?: () => void;
 };
 
-const COLORS = ['#4caf50', '#ff9800', '#f44336', '#2196f3', '#9c27b0', '#00bcd4', '#e91e63', '#795548'] as const;
+import { theme } from '../constants/theme';
+
+const COLORS = [
+    theme.palette.green,
+    theme.palette.orange,
+    theme.palette.red,
+    theme.palette.blue,
+    theme.palette.purple,
+    theme.palette.cyan,
+    theme.palette.pink,
+    theme.palette.brown
+] as const;
 
 export const TagSelector = ({
     selectedTagId,
@@ -22,7 +33,7 @@ export const TagSelector = ({
     const { tags, addTag, deleteTag } = useStore();
     const { showToast } = useToastStore();
 
-    const [showModal, setShowModal] = useState(false);
+    const [isAdding, setIsAdding] = useState(false);
     const [newTagName, setNewTagName] = useState('');
     const [selectedColor, setSelectedColor] = useState<(typeof COLORS)[number]>(COLORS[0]);
 
@@ -36,7 +47,7 @@ export const TagSelector = ({
 
         addTag(name, selectedColor);
         setNewTagName('');
-        setShowModal(false);
+        setIsAdding(false);
         showToast('Tag created successfully', 'success');
     };
 
@@ -125,42 +136,40 @@ export const TagSelector = ({
                 })}
 
 
-
                 <Pressable
-                    onPress={() => setShowModal(true)}
-                    hitSlop={10}
-                    style={({ pressed }) => [styles.addButton, { opacity: pressed ? 0.75 : 1 }]}
+                    style={[styles.addButton, isAdding && styles.addButtonActive]}
+                    onPress={() => setIsAdding(!isAdding)}
                 >
-                    <Plus size={18} color={'#fff'} />
+                    <Plus size={18} color={theme.colors.white} />
                 </Pressable>
             </ScrollView>
 
-            <Modal visible={showModal} transparent animationType={'fade'}>
+            <Modal visible={isAdding} transparent animationType={'fade'}>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
                         <View style={styles.modalHeader}>
                             <Text style={styles.modalTitle}>{'New Tag'}</Text>
-                            <Pressable onPress={() => setShowModal(false)}>
-                                <X size={24} color={'#fff'} />
+                            <Pressable onPress={() => setIsAdding(false)} style={styles.closeButton}>
+                                <X size={24} color={theme.colors.white} />
                             </Pressable>
                         </View>
 
                         <TextInput
                             style={styles.input}
-                            placeholder={'Tag Name'}
-                            placeholderTextColor={'#666'}
+                            placeholder="Tag name"
+                            placeholderTextColor={theme.colors.textSecondary}
                             value={newTagName}
                             onChangeText={setNewTagName}
                         />
 
-                        <View style={styles.colorGrid}>
+                        <View style={styles.colors}>
                             {COLORS.map((color) => (
                                 <Pressable
                                     key={color}
                                     style={[
-                                        styles.colorCircle,
+                                        styles.colorOption,
                                         { backgroundColor: color },
-                                        selectedColor === color && styles.selectedColor,
+                                        selectedColor === color && styles.colorSelected,
                                     ]}
                                     onPress={() => setSelectedColor(color)}
                                 />
@@ -215,21 +224,30 @@ const styles = StyleSheet.create({
     chipTextSelected: {
         color: '#fff',
     },
-    header:{
+    header: {
         color: '#fff',
         fontSize: 16,
         fontWeight: '600',
         marginBottom: 6,
     },
+    tagText: {
+        fontSize: 13,
+        fontWeight: '600',
+    },
     addButton: {
-        width: 34,
-        height: 34,
-        borderRadius: 17,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        backgroundColor: theme.colors.surface,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#1E1E1E',
         borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.10)',
+        borderColor: theme.colors.border,
+        borderStyle: 'dashed',
+    },
+    addButtonActive: {
+        backgroundColor: theme.colors.surfaceHighlight,
+        borderStyle: 'solid',
     },
     modalOverlay: {
         flex: 1,
@@ -253,37 +271,63 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
     },
-    input: {
-        backgroundColor: '#333',
-        color: '#fff',
-        padding: 16,
-        borderRadius: 8,
-        fontSize: 16,
+    inputContainer: {
+        marginBottom: 16,
+        backgroundColor: theme.colors.surface,
+        padding: 12,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
     },
-    colorGrid: {
+    inputHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 12,
+    },
+    inputTitle: {
+        color: theme.colors.textTertiary,
+        fontSize: 12,
+        fontWeight: '600',
+    },
+    closeButton: {
+        padding: 4,
+    },
+    input: {
+        color: theme.colors.white,
+        fontSize: 16,
+        marginBottom: 12,
+        padding: 0,
+    },
+    colors: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: 12,
-        justifyContent: 'center',
+        gap: 8,
+        marginBottom: 12,
     },
-    colorCircle: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
+    colorOption: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
     },
-    selectedColor: {
+    colorSelected: {
         borderWidth: 2,
-        borderColor: '#fff',
+        borderColor: theme.colors.white,
     },
     createButton: {
-        backgroundColor: '#4caf50',
-        padding: 16,
+        backgroundColor: theme.colors.surface,
+        padding: 10,
         borderRadius: 8,
         alignItems: 'center',
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+    },
+    createButtonDisabled: {
+        opacity: 0.5,
     },
     createButtonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 16,
+        color: theme.colors.white,
+        fontWeight: '600',
+        fontSize: 14,
     },
 });

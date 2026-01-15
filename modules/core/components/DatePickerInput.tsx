@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, Platform, StyleSheet, Modal } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Calendar as CalendarIcon, X } from 'lucide-react-native';
+import { theme } from '../constants/theme';
 
 type Props = {
     date?: number;
@@ -119,27 +120,45 @@ const styles = StyleSheet.create({
     modalOverlay: {
         flex: 1,
         justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: 'rgba(0,0,0,0.7)',
     },
     modalContent: {
-        backgroundColor: '#1E1E1E',
+        backgroundColor: theme.colors.surface,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        padding: 16,
-        paddingBottom: 32,
-        alignItems: 'center',
+        paddingBottom: 0,
+        alignItems: 'stretch',
+        borderRadius: 12,
+        marginTop: 8,
+        borderWidth: 1,
+        borderColor: theme.colors.border,
+        overflow: 'hidden',
     },
     closeButton: {
-        marginTop: 16,
-        padding: 12,
-        backgroundColor: '#333',
-        borderRadius: 8,
-        width: '100%',
-        alignItems: 'center',
+        marginTop: 0,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        backgroundColor: theme.colors.primary,
+        borderRadius: 0,
+        width: 'auto',
+        alignSelf: 'flex-end',
     },
     closeButtonText: {
-        color: '#fff',
+        color: theme.colors.white,
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 12,
+        backgroundColor: theme.colors.surfaceHighlight,
+        borderBottomWidth: 1,
+        borderBottomColor: theme.colors.border,
+    },
+    headerTitle: {
+        color: theme.colors.white,
+        fontWeight: '600',
     },
 });
