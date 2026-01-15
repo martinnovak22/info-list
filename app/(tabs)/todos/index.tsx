@@ -5,6 +5,7 @@ import { TaskItem } from '../../../modules/core/components/TaskItem';
 import { TagSelector } from '../../../modules/core/components/TagSelector';
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react-native';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 import { ScreenLayout } from '../../../modules/core/components/ScreenLayout';
 import { EmptyState } from '../../../modules/core/components/EmptyState';
 import { AddTaskModal } from '../../../modules/core/components/AddTaskModal';
@@ -74,10 +75,11 @@ export default function TasksScreen() {
                 </Pressable>
             </View>
 
-            <FlatList
+            <Animated.FlatList
                 data={filteredItems}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
+                keyExtractor={(item: { id: string }) => item.id}
+                itemLayoutAnimation={LinearTransition.springify()}
+                renderItem={({ item }: { item: any }) => (
                     <TaskItem item={item} tags={tags} onToggle={toggleItem} onDelete={deleteItem} />
                 )}
                 contentContainerStyle={styles.list}

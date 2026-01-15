@@ -1,12 +1,12 @@
-
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Item, Tag } from '../store/store';
-import { Trash2, CheckCircle, Circle } from 'lucide-react-native';
+import { Trash2, Check, Circle, Archive } from 'lucide-react-native';
 import { theme } from '../constants/theme';
-import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, LinearTransition, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useToastStore } from '../store/toastStore';
 import { cancelTaskNotification, scheduleTaskNotification } from '../utils/notifications';
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 type Props = {
     item: Item;
@@ -41,66 +41,94 @@ export const TaskItem = ({ item, tags, onToggle, onDelete }: Props) => {
 
     const formattedDate = item.dueDate ? new Date(item.dueDate).toLocaleDateString() : null;
 
+    const renderLeftActions = (_progress: any, dragX: any) => {
+        return (
+            <View style={styles.leftAction}>
+                <Check size={24} color={theme.colors.white} />
+            </View>
+        );
+    };
+
+    const renderRightActions = (_progress: any, dragX: any) => {
+        return (
+            <View style={styles.rightAction}>
+                <Trash2 size={24} color={theme.colors.white} />
+            </View>
+        );
+    };
+
     return (
         <Animated.View
-            style={[styles.container, { borderLeftColor: color }]}
+            style={[styles.containerWrapper]}
             layout={LinearTransition.springify()}
             entering={FadeIn}
             exiting={FadeOut}
         >
-            <Pressable
-                onPress={handleToggle}
-                style={({ pressed }) => [styles.content, { opacity: pressed ? 0.7 : 1 }]}
+            <Swipeable
+                renderLeftActions={renderLeftActions}
+                renderRightActions={renderRightActions}
+                onSwipeableOpen={(direction) => {
+                    if (direction === 'left') {
+                        handleDelete();
+                    } else if (direction === 'right') {
+                        handleToggle();
+                    }
+                }}
+                containerStyle={styles.swipeableContainer}
             >
-                {item.completed ? (
-                    <CheckCircle size={24} color={color} />
-                ) : (
-                    <Circle size={24} color={color} />
-                )}
+                <Pressable
+                    onPress={handleToggle}
+                    style={({ pressed }) => [
+                        styles.container,
+                        { borderLeftColor: color },
+                        { opacity: pressed ? 0.9 : 1, backgroundColor: theme.colors.surface }
+                    ]}
+                >
+                    {item.completed ? (
+                        <Check size={24} color={color} />
+                    ) : (
+                        <Circle size={24} color={color} />
+                    )}
 
-                <View style={styles.textContainer}>
-                    <Text style={[styles.text, item.completed && styles.textCompleted]}>
-                        {item.text}
-                    </Text>
-                    <View style={styles.metaRow}>
-                        {primaryTag && (
-                            <View style={[styles.tagBadge, { backgroundColor: color + '20' }]}>
-                                <Text style={[styles.tagText, { color }]}>{primaryTag.name}</Text>
-                            </View>
-                        )}
-                        {formattedDate && (
-                            <Text style={styles.dateText}>{formattedDate}</Text>
-                        )}
+                    <View style={styles.textContainer}>
+                        <Text style={[styles.text, item.completed && styles.textCompleted]}>
+                            {item.text}
+                        </Text>
+                        <View style={styles.metaRow}>
+                            {primaryTag && (
+                                <View style={[styles.tagBadge, { backgroundColor: color + '20' }]}>
+                                    <Text style={[styles.tagText, { color }]}>{primaryTag.name}</Text>
+                                </View>
+                            )}
+                            {formattedDate && (
+                                <Text style={styles.dateText}>{formattedDate}</Text>
+                            )}
+                        </View>
                     </View>
-                </View>
-            </Pressable>
-
-            <Pressable
-                onPress={handleDelete}
-                hitSlop={10}
-                style={styles.deleteButton}
-            >
-                <Trash2 size={20} color={theme.colors.error} />
-            </Pressable>
+                </Pressable>
+            </Swipeable>
         </Animated.View>
     );
 };
 
 const styles = StyleSheet.create({
+    containerWrapper: {
+        marginBottom: 8,
+        borderRadius: 12,
+        overflow: 'hidden',
+    },
+    swipeableContainer: {
+        backgroundColor: theme.colors.surface,
+        borderRadius: 12,
+    },
     container: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 12,
         paddingHorizontal: 16,
         backgroundColor: theme.colors.surface,
-        borderRadius: 12,
-        marginBottom: 8,
         minHeight: 56,
-    },
-    content: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flex: 1,
+        borderLeftWidth: 3,
         gap: 12,
     },
     textContainer: {
@@ -119,6 +147,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 8,
+        marginTop: 4,
     },
     tagBadge: {
         paddingHorizontal: 6,
@@ -133,30 +162,18 @@ const styles = StyleSheet.create({
         color: '#888',
         fontSize: 12,
     },
-    checkbox: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-        borderWidth: 2,
-        marginRight: 12,
-        alignItems: 'center',
+    leftAction: {
+        flex: 1,
+        backgroundColor: theme.colors.primary,
         justifyContent: 'center',
+        alignItems: 'flex-start',
+        paddingLeft: 20,
     },
-    deleteButton: {
-        padding: 8,
-        marginLeft: 8,
-    },
-    tagDot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        position: 'absolute',
-        top: 12,
-        right: 12,
-    },
-    time: {
-        fontSize: 11,
-        color: theme.colors.iconSecondary,
-        marginTop: 4,
+    rightAction: {
+        flex: 1,
+        backgroundColor: theme.colors.error,
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        paddingRight: 20,
     },
 });
